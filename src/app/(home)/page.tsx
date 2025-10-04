@@ -1,7 +1,10 @@
 import Image from "next/image";
+import Header from "./Components/hero";
 
 export default function Home() {
   return (
-    <><h1>holalakskakslka</h1></>
+    <>
+      <Header />
+    </>
   );
 }
