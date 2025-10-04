@@ -5,7 +5,7 @@ function Header() {
     <header className="bg-blue-600 text-white shadow-md">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
-        <h1 className="text-2xl font-bold">MiLogo</h1>
+        <h1 className="text-2xl font-bold font-floral">FL<span>🌸</span>RCAST</h1>
 
         {/* Menú de navegación */}
         <nav>
