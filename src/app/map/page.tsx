@@ -1,7 +1,11 @@
-import Map from "./_components/map";
+import MapGlobe from "./_components/map-globe";
 
 function MapPage() {
-  return <Map />;
+  return (
+    <>
+      <MapGlobe />
+    </>
+  );
 }
 
 export default MapPage;
