@@ -1,9 +1,7 @@
 "use client";
 
 import { useState, FC } from "react";
-import Globe from "./globe";
 import MapGlobe from "./map-globe";
-import GlobeBasic from "./globe-basic";
 
 // Tipos para el componente Map
 interface MapProps {
@@ -95,15 +93,6 @@ const Map: FC<MapProps> = ({ defaultView = "basic" }) => {
                     </div>
                 </div>
             </div>
-
-            {/* Renderizado condicional del componente de globo */}
-            {currentView === "basic" ? (
-                <GlobeBasic />
-            ) : currentView === "simple" ? (
-                <Globe />
-            ) : (
-                <MapGlobe />
-            )}
         </div>
     );
 };
