@@ -89,7 +89,10 @@ export interface CesiumFog {
 }
 
 // Interfaces de terreno y entidades
-export interface CesiumTerrainProvider {}
+export interface CesiumTerrainProvider {
+    // Interfaz básica para terrain provider
+    [key: string]: any;
+}
 
 export interface CesiumEntity {
     name?: string;
@@ -202,11 +205,32 @@ export interface ViewInfo {
     description: string;
 }
 
+// Interfaces para el módulo Cesium
+export interface CesiumModule {
+    Viewer: new (container: HTMLElement, options?: CesiumViewerConstructorOptions) => CesiumViewer;
+    Math: {
+        toRadians(degrees: number): number;
+    };
+    Cartesian3: {
+        fromDegrees(longitude: number, latitude: number, height?: number): CesiumCartesian3;
+    };
+    Color: CesiumColor & {
+        CYAN: CesiumColor;
+        RED: CesiumColor;
+        ORANGE: CesiumColor;
+        GREEN: CesiumColor;
+        PINK: CesiumColor;
+        GOLD: CesiumColor;
+    };
+    EllipsoidTerrainProvider: new () => CesiumTerrainProvider;
+    WorldTerrain: new () => CesiumTerrainProvider;
+}
+
 // Declaraciones globales
 declare global {
     interface Window {
         CESIUM_BASE_URL?: string;
-        Cesium?: any;
-        cesiumViewer?: any;
+        Cesium?: CesiumModule;
+        cesiumViewer?: CesiumViewer;
     }
 }

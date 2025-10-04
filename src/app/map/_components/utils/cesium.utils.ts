@@ -3,10 +3,14 @@
  * Funciones helper y configuraciones comunes
  */
 
-import type { CesiumViewerConstructorOptions, City, CesiumColor } from '../types/cesium.types';
+import type { CesiumViewerConstructorOptions, City } from '../types/cesium.types';
 
 /**
- * Configuración CDN de Cesium
+ * Co                outlineColor: (Cesium as any).Color.WHITE,
+                outlineWidth: 2,
+                heightReference: (Cesium as any).HeightReference.CLAMP_TO_GROUND,
+                disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                scaleByDistance: new (Cesium as any).NearFarScalar(1.5e2, 3.0, 1.5e7, 0.5)               scaleByDistance: new (Cesium as any).NearFarScalar(1.5e2, 2.0, 1.5e7, 0.5)ración CDN de Cesium
  */
 export const CESIUM_CDN_URL = "https://cesium.com/downloads/cesiumjs/releases/1.134/Build/Cesium/";
 
@@ -38,56 +42,56 @@ export const getAdvancedViewerConfig = (): CesiumViewerConstructorOptions => ({
 /**
  * Datos de ciudades predefinidas
  */
-export const getCitiesData = (Cesium: any): City[] => [
+export const getCitiesData = (Cesium: unknown): City[] => [
     {
         name: "Nueva York",
         longitude: -74.006,
         latitude: 40.7128,
         description: "Nueva York, Estados Unidos<br/>Centro financiero mundial",
-        color: Cesium.Color.CYAN
+        color: (Cesium as any).Color.CYAN
     },
     {
         name: "Londres",
         longitude: -0.1278,
         latitude: 51.5074,
         description: "Londres, Reino Unido<br/>Capital histórica",
-        color: Cesium.Color.RED
+        color: (Cesium as any).Color.RED
     },
     {
         name: "Tokio",
         longitude: 139.6503,
         latitude: 35.6762,
         description: "Tokio, Japón<br/>Metrópolis tecnológica",
-        color: Cesium.Color.ORANGE
+        color: (Cesium as any).Color.ORANGE
     },
     {
         name: "Sídney",
         longitude: 151.2093,
         latitude: -33.8688,
         description: "Sídney, Australia<br/>Puerto del Pacífico Sur",
-        color: Cesium.Color.GREEN
+        color: (Cesium as any).Color.GREEN
     },
     {
         name: "París",
         longitude: 2.3522,
         latitude: 48.8566,
         description: "París, Francia<br/>Ciudad de la luz",
-        color: Cesium.Color.PINK
+        color: (Cesium as any).Color.PINK
     },
     {
         name: "Dubai",
         longitude: 55.2708,
         latitude: 25.2048,
         description: "Dubai, EAU<br/>Oasis moderno",
-        color: Cesium.Color.GOLD
+        color: (Cesium as any).Color.GOLD
     }
 ];
 
 /**
  * Configurar controles de cámara avanzados
  */
-export const configureAdvancedControls = (viewer: any): void => {
-    const controller = viewer.scene.screenSpaceCameraController;
+export const configureAdvancedControls = (viewer: unknown): void => {
+    const controller = (viewer as any).scene.screenSpaceCameraController;
     controller.minimumZoomDistance = 1000;
     controller.maximumZoomDistance = 50000000;
     controller.enableRotate = true;
@@ -103,14 +107,14 @@ export const configureAdvancedControls = (viewer: any): void => {
 /**
  * Configurar vista inicial de cámara
  */
-export const setInitialCameraView = (camera: any, Cesium: any, coordinates?: { lon: number, lat: number, height: number }): void => {
+export const setInitialCameraView = (camera: unknown, Cesium: unknown, coordinates?: { lon: number, lat: number, height: number }): void => {
     const { lon = 0.0, lat = 20.0, height = 12000000 } = coordinates || {};
     
-    camera.setView({
-        destination: Cesium.Cartesian3.fromDegrees(lon, lat, height),
+    (camera as any).setView({
+        destination: (Cesium as any).Cartesian3.fromDegrees(lon, lat, height),
         orientation: {
-            heading: Cesium.Math.toRadians(0.0),
-            pitch: Cesium.Math.toRadians(-45.0),
+            heading: (Cesium as any).Math.toRadians(0.0),
+            pitch: (Cesium as any).Math.toRadians(-45.0),
             roll: 0.0
         }
     });
@@ -119,22 +123,22 @@ export const setInitialCameraView = (camera: any, Cesium: any, coordinates?: { l
 /**
  * Configurar escena visual
  */
-export const configureSceneVisuals = (scene: any): void => {
-    scene.skyAtmosphere.show = true;
-    scene.globe.showGroundAtmosphere = true;
-    scene.globe.enableLighting = false;
-    scene.globe.dynamicAtmosphereLighting = false;
-    scene.globe.atmosphereLightIntensity = 10.0;
-    scene.fog.enabled = false;
+export const configureSceneVisuals = (scene: unknown): void => {
+    (scene as any).skyAtmosphere.show = true;
+    (scene as any).globe.showGroundAtmosphere = true;
+    (scene as any).globe.enableLighting = false;
+    (scene as any).globe.dynamicAtmosphereLighting = false;
+    (scene as any).globe.atmosphereLightIntensity = 10.0;
+    (scene as any).fog.enabled = false;
 };
 
 /**
  * Configurar optimizaciones de rendimiento
  */
-export const configurePerformanceOptimizations = (viewer: any): void => {
-    viewer.scene.globe.tileCacheSize = 1000;
-    viewer.scene.requestRenderMode = true;
-    viewer.scene.maximumRenderTimeChange = Infinity;
+export const configurePerformanceOptimizations = (viewer: unknown): void => {
+    (viewer as any).scene.globe.tileCacheSize = 1000;
+    (viewer as any).scene.requestRenderMode = true;
+    (viewer as any).scene.maximumRenderTimeChange = Infinity;
 };
 
 /**
@@ -150,20 +154,20 @@ export const handleCesiumError = (error: unknown, setError: (error: string) => v
 /**
  * Configurar terreno avanzado con fallback
  */
-export const setupAdvancedTerrain = async (viewer: any, Cesium: any): Promise<boolean> => {
+export const setupAdvancedTerrain = async (viewer: unknown, Cesium: unknown): Promise<boolean> => {
     try {
-        if (typeof Cesium.createWorldTerrainAsync === 'function') {
-            const worldTerrain = await Cesium.createWorldTerrainAsync({
+        if (typeof (Cesium as any).createWorldTerrainAsync === 'function') {
+            const worldTerrain = await (Cesium as any).createWorldTerrainAsync({
                 requestWaterMask: true,
                 requestVertexNormals: true
             });
-            viewer.terrainProvider = worldTerrain;
+            (viewer as any).terrainProvider = await (Cesium as any).createWorldTerrainAsync();
             return true;
         }
         return false;
     } catch (terrainError: any) {
         console.warn('Error cargando Cesium Ion Terrain:', terrainError.message);
-        viewer.terrainProvider = new Cesium.EllipsoidTerrainProvider();
+        (viewer as any).terrainProvider = new (Cesium as any).EllipsoidTerrainProvider();
         return false;
     }
 };
@@ -171,33 +175,33 @@ export const setupAdvancedTerrain = async (viewer: any, Cesium: any): Promise<bo
 /**
  * Añadir marcadores de ciudades
  */
-export const addCityMarkers = (viewer: any, Cesium: any): void => {
+export const addCityMarkers = (viewer: unknown, Cesium: unknown): void => {
     const cities = getCitiesData(Cesium);
     
     cities.forEach((city: City) => {
-        viewer.entities.add({
-            position: Cesium.Cartesian3.fromDegrees(city.longitude, city.latitude, 0),
+        (viewer as any).entities.add({
+            position: (Cesium as any).Cartesian3.fromDegrees(city.longitude, city.latitude, 0),
             name: city.name,
             description: city.description,
             point: {
                 pixelSize: 20,
                 color: city.color,
-                outlineColor: Cesium.Color.WHITE,
+                outlineColor: (Cesium as any).Color.WHITE,
                 outlineWidth: 3,
-                heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                heightReference: (Cesium as any).HeightReference.CLAMP_TO_GROUND,
                 disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                scaleByDistance: new Cesium.NearFarScalar(1.5e2, 3.0, 1.5e7, 0.5)
+                scaleByDistance: new (Cesium as any).NearFarScalar(1.5e2, 3.0, 1.5e7, 0.5)
             },
             label: {
                 text: city.name,
                 font: '14pt sans-serif',
-                fillColor: Cesium.Color.WHITE,
-                outlineColor: Cesium.Color.BLACK,
+                fillColor: (Cesium as any).Color.WHITE,
+                outlineColor: (Cesium as any).Color.BLACK,
                 outlineWidth: 2,
-                style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-                pixelOffset: new Cesium.Cartesian2(0, -40),
+                style: (Cesium as any).LabelStyle.FILL_AND_OUTLINE,
+                pixelOffset: new (Cesium as any).Cartesian2(0, -40),
                 disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                scaleByDistance: new Cesium.NearFarScalar(1.5e2, 1.0, 1.5e7, 0.0)
+                scaleByDistance: new (Cesium as any).NearFarScalar(1.5e2, 1.0, 1.5e7, 0.0)
             }
         });
     });
@@ -206,14 +210,14 @@ export const addCityMarkers = (viewer: any, Cesium: any): void => {
 /**
  * Configurar eventos de interacción
  */
-export const setupInteractionEvents = (viewer: any, Cesium: any): void => {
-    viewer.selectedEntityChanged.addEventListener(() => {
-        const selectedEntity: any = viewer.selectedEntity;
+export const setupInteractionEvents = (viewer: unknown, Cesium: unknown): void => {
+    (viewer as any).selectedEntityChanged.addEventListener(() => {
+        const selectedEntity = (viewer as any).selectedEntity;
         if (selectedEntity && selectedEntity.name) {
             console.log(`Ciudad seleccionada: ${selectedEntity.name}`);
-            viewer.flyTo(selectedEntity, {
+            (viewer as any).flyTo(selectedEntity, {
                 duration: 2.0,
-                offset: new Cesium.HeadingPitchRange(0, Cesium.Math.toRadians(-45), 5000000)
+                offset: new (Cesium as any).HeadingPitchRange(0, (Cesium as any).Math.toRadians(-45), 5000000)
             });
         }
     });

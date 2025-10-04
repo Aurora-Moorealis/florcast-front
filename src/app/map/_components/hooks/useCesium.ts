@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
-import type { CesiumViewer } from '../types/cesium.types';
+// Types para Cesium se manejan como any debido a la complejidad de la librería
 import { 
     configureCesiumBase, 
     handleCesiumError,
@@ -36,7 +36,7 @@ export const useCesiumAdvanced = () => {
             try {
                 console.log("🌍 Iniciando Cesium Earth Pro...");
                 
-                const Cesium = await import("cesium");
+                const Cesium = await import("cesium") as typeof import("cesium");
                 configureCesiumBase();
                 
                 if (!cesiumContainerRef.current) {
@@ -53,39 +53,53 @@ export const useCesiumAdvanced = () => {
                 console.log("✅ Viewer Earth Pro creado");
 
                 // Configurar visuales de la escena
-                configureSceneVisuals(cesiumViewer.scene);
-                console.log("🎨 Visuales configurados");
+                if (cesiumViewer) {
+                    configureSceneVisuals((cesiumViewer as any).scene);
+                    console.log("🎨 Visuales configurados");
+                }
 
                 // Configurar terreno avanzado
-                await setupAdvancedTerrain(cesiumViewer, Cesium);
-                setTerrainLoaded(true);
-                console.log("🏔️ Terreno HD cargado");
+                if (cesiumViewer) {
+                    await setupAdvancedTerrain(cesiumViewer, Cesium);
+                    setTerrainLoaded(true);
+                    console.log("🏔️ Terreno HD cargado");
+                }
 
                 // Agregar marcadores de ciudades
-                await addCityMarkers(cesiumViewer, Cesium);
-                console.log("🏙️ 6 ciudades añadidas");
+                if (cesiumViewer) {
+                    await addCityMarkers(cesiumViewer, Cesium);
+                    console.log("🏙️ 6 ciudades añadidas");
+                }
 
                 // Configurar vista inicial
-                setInitialCameraView(cesiumViewer.camera, Cesium, { 
-                    lon: -73.98, lat: 40.75, height: 2000000 
-                });
+                if (cesiumViewer) {
+                    setInitialCameraView((cesiumViewer as any).camera, Cesium, { 
+                        lon: -73.98, lat: 40.75, height: 2000000 
+                    });
+                }
 
                 // Configurar eventos e interacciones
-                setupInteractionEvents(cesiumViewer, Cesium);
-                console.log("🖱️ Eventos configurados");
+                if (cesiumViewer) {
+                    setupInteractionEvents(cesiumViewer, Cesium);
+                    console.log("🖱️ Eventos configurados");
+                }
 
                 // Configurar controles avanzados
-                configureAdvancedControls(cesiumViewer);
-                console.log("⚙️ Controles avanzados activos");
+                if (cesiumViewer) {
+                    configureAdvancedControls(cesiumViewer);
+                    console.log("⚙️ Controles avanzados activos");
+                }
 
                 // Optimizaciones de rendimiento
-                configurePerformanceOptimizations(cesiumViewer);
-                console.log("⚡ Optimizaciones aplicadas");
+                if (cesiumViewer) {
+                    configurePerformanceOptimizations(cesiumViewer);
+                    console.log("⚡ Optimizaciones aplicadas");
+                }
 
                 console.log("🚀 Earth Pro inicializado completamente");
                 setIsLoading(false);
 
-            } catch (err: any) {
+            } catch (err: unknown) {
                 handleCesiumError(err, setError, setIsLoading);
             }
         };
@@ -94,8 +108,8 @@ export const useCesiumAdvanced = () => {
 
         return () => {
             try {
-                if (cesiumViewer && !cesiumViewer.isDestroyed()) {
-                    cesiumViewer.destroy();
+                if (cesiumViewer && !(cesiumViewer as any).isDestroyed()) {
+                    (cesiumViewer as any).destroy();
                     console.log("🧹 Earth Pro limpiado");
                 }
             } catch (err) {
