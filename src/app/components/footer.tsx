@@ -59,7 +59,6 @@ function Footer() {
             </div>
           </div>
 
-          {/* Enlaces rápidos */}
           <div>
             <h3 className="font-bold text-xl mb-6 text-green-200 flex items-center gap-2">
               <FaLeaf className="text-green-300" />
