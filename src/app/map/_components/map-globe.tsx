@@ -7,10 +7,6 @@ import FlowerFilterPanel from "./ui/FlowerFilterPanel";
 import { Flower } from "./types/flowers";
 import { FlowerFilter } from "./types/interfaces";
 
-/**
- * Componente Avanzado del Globo 3D con CesiumJS
- * Con movimientos suaves, oclusión de puntos e información interactiva
- */
 const MapGlobe = () => {
     const [flowers] = useState<Flower[]>([]);
     const [selectedFlower, setSelectedFlower] = useState<any>(null);
@@ -48,7 +44,6 @@ const MapGlobe = () => {
                     },
                     duration: 3.0
                 });
-                console.log('🎯 Vista centrada automáticamente');
             } catch (error) {
                 console.error('Error centrando vista:', error);
             }
@@ -58,7 +53,6 @@ const MapGlobe = () => {
     // Callback para cuando se selecciona una flor
     const handleFlowerSelect = useCallback((flower: any) => {
         setSelectedFlower(flower);
-        console.log('Flor seleccionada:', flower);
         
         // Navegar automáticamente al punto de la flor en el mapa
         if (viewer && flower) {
@@ -74,17 +68,14 @@ const MapGlobe = () => {
     // Callback para cuando cambian los filtros
     const handleFiltersChange = useCallback((filters: FlowerFilter) => {
         setCurrentFilters(filters);
-        console.log('Filtros actualizados:', filters);
         // Aquí puedes agregar lógica para filtrar flores en el mapa
     }, []);
 
     // Ejecutar centrado automático cuando el viewer esté listo
     useEffect(() => {
         if (viewer && !isLoading) {
-            console.log('🚀 Preparando centrado automático del globo...');
             // Ejecutar la misma función del botón después de un breve delay
             const timer = setTimeout(() => {
-                console.log('⚡ Ejecutando centrado automático (misma función que el botón)');
                 handleCenterView();
             }, 2000); // 2 segundos después de que termine la carga
             
@@ -101,7 +92,7 @@ const MapGlobe = () => {
             {isLoading && (
                 <LoadingOverlay 
                     title="FLORCAST Globe"
-                    subtitle="Optimizado para memoria - Inicializando..."
+                    subtitle="Iniciado Globo"
                     color="green"
                 />
             )}

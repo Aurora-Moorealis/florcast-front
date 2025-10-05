@@ -8,22 +8,19 @@ import { Flower } from '../types/flowers';
 import { FlowerFilter } from '../types/interfaces';
 import { mockFlowerData } from '../../../../data/flower';
 
-// Interfaces adicionales para el UI
 interface FlowerUIData extends Flower {
     color: string;
     category: string;
-    rarity: string;
 }
 
 interface FlowerFilterPanelProps {
     className?: string;
-    flowers?: Flower[]; // Datos de la API
-    onFlowerSelect?: (flower: FlowerUIData) => void; // Callback cuando se selecciona una flor
-    onFiltersChange?: (filters: FlowerFilter) => void; // Callback cuando cambian los filtros
-    isLoading?: boolean; // Estado de carga
+    flowers?: Flower[];
+    onFlowerSelect?: (flower: FlowerUIData) => void; 
+    onFiltersChange?: (filters: FlowerFilter) => void; 
+    isLoading?: boolean; 
 }
 
-// Mapeo de familias a categorías UI
 const familyToCategoryMap: Record<string, string> = {
     'Rosaceae': 'clásica',
     'Asteraceae': 'silvestre',
@@ -39,7 +36,7 @@ const familyToCategoryMap: Record<string, string> = {
     'Fabaceae': 'silvestre'
 };
 
-// Mapeo de nombres comunes a colores
+
 const flowerColorMap: Record<string, string> = {
     'rosa': '#EC4899',
     'rose': '#EC4899',
@@ -61,23 +58,19 @@ const flowerColorMap: Record<string, string> = {
     'coral': '#F97316'
 };
 
-// Determinar rareza basada en familia, altura y características especiales
 const determineRarity = (flower: Flower): string => {
-    // Como la API envía growth_rate = 0, usamos otros criterios
     const rareFamilies = ['Orchidaceae', 'Strelitziaceae', 'Theaceae'];
     const isHighMountain = flower.description.toLowerCase().includes('mountain') || 
                           flower.description.toLowerCase().includes('alpine') ||
                           flower.location_name.toLowerCase().includes('everest') ||
                           flower.location_name.toLowerCase().includes('swiss');
-    
-    // Legendaria: Orquídeas de montaña, flores extremadamente raras
+
     if ((rareFamilies.includes(flower.family) && isHighMountain) || 
         flower.description.toLowerCase().includes('rare') ||
         flower.description.toLowerCase().includes('toxic')) {
         return 'legendaria';
     }
     
-    // Exótica: Orquídeas, flores tropicales únicas, flores de familias raras
     if (rareFamilies.includes(flower.family) || 
         flower.description.toLowerCase().includes('tropical') ||
         flower.description.toLowerCase().includes('exotic') ||
@@ -85,18 +78,15 @@ const determineRarity = (flower: Flower): string => {
         return 'exótica';
     }
     
-    // Rara: Flores medianas con características especiales
     if (flower.height >= 100 || 
         flower.description.toLowerCase().includes('fragrance') ||
         flower.description.toLowerCase().includes('ornamental')) {
         return 'rara';
     }
     
-    // Común: Flores pequeñas y comunes
     return 'común';
 };
 
-// Convertir datos de API a formato UI
 const convertFlowerData = (apiFlowers: Flower[]): FlowerUIData[] => {
     return apiFlowers.map(flower => {
         const category = familyToCategoryMap[flower.family] || 'silvestre';
@@ -127,7 +117,6 @@ export const FlowerFilterPanel: FC<FlowerFilterPanelProps> = ({
     const [selectedRarity, setSelectedRarity] = useState('todos');
     const [isExpanded, setIsExpanded] = useState(true);
 
-    // Notificar cambios en los filtros
     React.useEffect(() => {
         if (onFiltersChange) {
             const filters: FlowerFilter = {
@@ -138,21 +127,18 @@ export const FlowerFilterPanel: FC<FlowerFilterPanelProps> = ({
         }
     }, [selectedCategory, selectedRarity, onFiltersChange]);
 
-    // Convertir datos de API a formato UI o usar datos mock del archivo flower.ts
     const flowerDatabase: FlowerUIData[] = flowers.length > 0 
         ? convertFlowerData(flowers)
         : convertFlowerData(mockFlowerData);
 
-    // Filtrar flores según criterios
     const filteredFlowers = flowerDatabase.filter(flower => {
         const matchesSearch = flower.common_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             flower.scientific_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             flower.location_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             flower.family.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = selectedCategory === 'todos' || flower.category === selectedCategory;
-        const matchesRarity = selectedRarity === 'todos' || flower.rarity === selectedRarity;
-        
-        return matchesSearch && matchesCategory && matchesRarity;
+
+        return matchesSearch && matchesCategory;
     });
 
     const categories = ['todos', 'clásica', 'exótica', 'silvestre', 'híbrida', 'antigua', 'tropical', 'mágica'];
@@ -219,22 +205,6 @@ export const FlowerFilterPanel: FC<FlowerFilterPanelProps> = ({
                         </select>
                     </div>
 
-                    {/* Filtros de rareza */}
-                    <div className="p-3 border-b border-white/10">
-                        <h3 className="text-xs font-semibold text-gray-300 mb-2 uppercase tracking-wide">Rareza</h3>
-                        <select
-                            value={selectedRarity}
-                            onChange={(e) => setSelectedRarity(e.target.value)}
-                            className="w-full p-2 bg-white/5 border border-white/10 rounded-md text-white text-sm focus:outline-none focus:border-pink-400/50 cursor-pointer"
-                        >
-                            {rarities.map(rarity => (
-                                <option key={rarity} value={rarity} className="bg-gray-800">
-                                    {rarity.charAt(0).toUpperCase() + rarity.slice(1)}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
                     {/* Lista de flores filtradas */}
                     <div className="flex-1 overflow-y-auto p-3 custom-scrollbar">
                         <div className="flex items-center justify-between mb-3">
@@ -283,16 +253,6 @@ export const FlowerFilterPanel: FC<FlowerFilterPanelProps> = ({
                                                 {flower.scientific_name}
                                             </p>
                                             <div className="flex items-center gap-2 mt-1">
-                                                <span className={`
-                                                    px-2 py-0.5 rounded-full text-xs font-medium transition-all
-                                                    ${flower.rarity === 'legendaria' ? 'bg-amber-500/20 text-amber-300 group-hover:bg-amber-500/40' :
-                                                      flower.rarity === 'exótica' ? 'bg-purple-500/20 text-purple-300 group-hover:bg-purple-500/40' :
-                                                      flower.rarity === 'rara' ? 'bg-blue-500/20 text-blue-300 group-hover:bg-blue-500/40' :
-                                                      'bg-green-500/20 text-green-300 group-hover:bg-green-500/40'
-                                                    }
-                                                `}>
-                                                    {flower.rarity}
-                                                </span>
                                                 <span className="text-xs text-gray-400 group-hover:text-gray-200 transition-colors">{flower.location_name}</span>
                                             </div>
                                         </div>

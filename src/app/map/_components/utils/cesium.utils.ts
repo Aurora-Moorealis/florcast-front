@@ -263,11 +263,6 @@ export const addFlowerMarkers = (viewer: unknown, Cesium: unknown, flowers: Flow
                 <p style="margin: 0 0 8px 0;"><strong>Familia:</strong> ${flower.family}</p>
                 <p style="margin: 0 0 8px 0;"><strong>Altura:</strong> ${flower.height} cm</p>
                 <p style="margin: 0 0 8px 0;"><strong>Temporada:</strong> ${Array.isArray(flower.bloom_season) ? flower.bloom_season.join(', ') : flower.bloom_season}</p>
-                <p style="margin: 0 0 8px 0;"><strong>Rareza:</strong> <span style="color: ${
-                    rarity === 'legendaria' ? '#FFD700' :
-                    rarity === 'exótica' ? '#9C27B0' :
-                    rarity === 'rara' ? '#2196F3' : '#4CAF50'
-                }">${rarity}</span></p>
                 <p style="margin: 0 0 8px 0;">${flower.description}</p>
                 <p style="margin: 0; color: #666; font-size: 0.9em;">${flower.location_name}</p>
             </div>
@@ -893,7 +888,6 @@ export const configureUltraHighQuality = (viewer: unknown, Cesium: unknown): voi
             }
         }
         
-        console.log("🌟 Configuración ultra-alta calidad aplicada");
     } catch (error) {
         console.warn("⚠️ Error aplicando configuración ultra-alta:", error);
     }

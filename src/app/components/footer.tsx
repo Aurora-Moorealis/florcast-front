@@ -133,10 +133,10 @@ function Footer() {
 
             {/* Enlaces legales */}
             <div className="flex flex-wrap gap-6 text-sm">
-              <Link href="#" className="text-green-200 hover:text-white transition-colors">
+              <Link href="/privacy" className="text-green-200 hover:text-white transition-colors">
                 Política de Privacidad
               </Link>
-              <Link href="#" className="text-green-200 hover:text-white transition-colors">
+              <Link href="/terms" className="text-green-200 hover:text-white transition-colors">
                 Términos de Uso
               </Link>
               <Link href="https://github.com/Aurora-Moorealis/florcast-back" className="text-green-200 hover:text-white transition-colors">

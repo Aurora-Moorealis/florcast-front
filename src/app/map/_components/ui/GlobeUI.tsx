@@ -1,6 +1,6 @@
 
 import { FC } from 'react';
-import { Rose } from 'lucide-react'
+import { Rose, Plus } from 'lucide-react'
 
 interface LoadingOverlayProps {
     title: string;
@@ -74,7 +74,7 @@ export const SpecialEffectsControls: FC<SpecialEffectsControlsProps> = ({ classN
                 {/* Estado del tiempo fijo */}
                 <div className="flex items-center gap-3 text-sm text-green-300 bg-green-900/20 rounded p-2 border border-green-700/50">
                     <span className="w-6 h-6 bg-green-800 rounded flex items-center justify-center text-xs font-bold text-yellow-300 border border-green-600">
-                        ☀
+                        ☀JJJJJJJJ
                     </span>
                     <span className="text-lg">{timeStatus.icon}</span>
                     <span className="flex-1">{timeStatus.name}</span>
@@ -496,21 +496,8 @@ export const NavigationControls: FC<NavigationControlsProps> = ({
                     group
                 "
                 title="Centrar vista"
-            >
-                <svg 
-                    className="w-6 h-6 group-hover:text-blue-400 transition-colors" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                >
-                    <path 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
-                        strokeWidth={2} 
-                        d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" 
-                    />
-                </svg>
-            </button>
+
+            ><Plus className="size-6" /></button>
 
             <button
                 onClick={handleGoHome}
