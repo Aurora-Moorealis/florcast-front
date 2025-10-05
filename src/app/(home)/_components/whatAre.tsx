@@ -41,7 +41,7 @@ const WhatAre = forwardRef<HTMLDivElement, WhatAreProps>(
             <Images
               width={400}
               height={400}
-              src="/pinkFlower.jpg"
+              src="/pinkFlower copy.jpg"
               alt="Campo de flores - What we are"
               className="section-image rounded-lg shadow-2xl transform hover:scale-105 transition-transform duration-300"
             />
