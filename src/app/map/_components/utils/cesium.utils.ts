@@ -22,19 +22,19 @@ export const configureCesiumBase = (): void => {
 };
 
 /**
- * Configuración del viewer Earth Pro
+ * Configuración del viewer optimizada para memoria
  */
 export const getAdvancedViewerConfig = (): CesiumViewerConstructorOptions => ({
     animation: false,
-    baseLayerPicker: true,
+    baseLayerPicker: false,  // Desactivado para ahorrar memoria
     fullscreenButton: true,
     geocoder: false,
     homeButton: true,
-    infoBox: true,
+    infoBox: false,  // Desactivado para ahorrar memoria
     sceneModePicker: false,
-    selectionIndicator: true,
+    selectionIndicator: false,  // Desactivado para ahorrar memoria
     timeline: false,
-    navigationHelpButton: true,
+    navigationHelpButton: false,  // Desactivado para ahorrar memoria
     navigationInstructionsInitiallyVisible: false,
     scene3DOnly: true
 });
@@ -269,12 +269,12 @@ export const configureUltraHighQuality = (viewer: unknown, Cesium: unknown): voi
             globe.atmosphereMieScaleHeight = 3200;
         }
         
-        // Configuración de sombras dinámicas
+        // Configuración de sombras optimizada para memoria
         if (scene.shadowMap) {
             scene.shadowMap.enabled = true;
-            scene.shadowMap.size = 4096;  // Alta resolución de sombras
+            scene.shadowMap.size = 1024;  // Resolución optimizada para memoria
             if (scene.shadowMap.softShadows !== undefined) {
-                scene.shadowMap.softShadows = true;
+                scene.shadowMap.softShadows = false;  // Desactivar sombras suaves para ahorrar memoria
             }
             if (scene.shadowMap.darkness !== undefined) {
                 scene.shadowMap.darkness = 0.3;

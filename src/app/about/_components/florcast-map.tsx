@@ -57,9 +57,7 @@ const FlorcastMap = forwardRef<HTMLElement, FlorcastMapProps>(({ className }, re
               </div>
               
               <div className="about-animate bg-blue-50 p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
-                <span className="text-blue-600 font-semibold flex items-center">
-                  🌸 <span className="ml-2">Flowering Predictions</span>
-                </span>
+                   <span className="ml-2">Flowering Predictions</span>
               </div>
               
               <div className="about-animate bg-yellow-50 p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">

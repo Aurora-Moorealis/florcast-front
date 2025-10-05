@@ -1,6 +1,11 @@
 /**
  * Hook personalizado para CesiumJS Earth Pro
- * Lógica para el globo 3D avanzado con 6 ciudades
+ * Lóg                // Configuración básica optimizada para memoria
+                configureSceneVisuals((cesiumViewer as any).scene);
+                console.log("🔧 Sistema básico configurado");
+                
+                // Terreno básico sin ultra-HD para ahorrar memoria
+                setTerrainLoaded(true); el globo 3D avanzado con 6 ciudades
  */
 
 import { useState, useEffect, useRef } from 'react';
@@ -50,11 +55,18 @@ export const useCesiumAdvanced = () => {
                 );
                 
                 setViewer(cesiumViewer);
-                console.log("✅ Viewer Ultra creado");
+                console.log("✅ Viewer Basic creado");
 
-                // Configurar visuales mejorados
-                configureSceneVisuals((cesiumViewer as any).scene);
-                console.log("🎨 Visuales diurnos aplicados");
+                // Configurar para bajo uso de memoria
+                const viewerScene = (cesiumViewer as any).scene;
+                viewerScene.requestRenderMode = true;  // Renderizado bajo demanda
+                viewerScene.maximumRenderTimeChange = Infinity;
+                viewerScene.globe.tileCacheSize = 50;  // Cache pequeño
+                viewerScene.globe.maximumScreenSpaceError = 4;  // Menor calidad para ahorrar memoria
+                
+                // Configurar visuales básicos
+                configureSceneVisuals(viewerScene);
+                console.log("🎨 Visuales básicos aplicados (memoria optimizada)");
 
                 // Configuración de calidad ultra
                 const { configureUltraHighQuality, setupUltraHDTerrain, setupAdvancedAtmosphere } = await import('../utils/cesium.utils');
@@ -77,22 +89,25 @@ export const useCesiumAdvanced = () => {
                 setupCityHoverAnimations(cesiumViewer, Cesium);
                 console.log("🎮 Controles y animaciones listos");
 
-                // Efectos cinematográficos
-                const { setupRealisticWaterEffects, setupParticleWeatherSystem, setupCinematicLighting } = await import('../utils/cesium.utils');
-                
-                setupRealisticWaterEffects(cesiumViewer, Cesium);
-                setupParticleWeatherSystem(cesiumViewer, Cesium);
-                setupCinematicLighting(cesiumViewer, Cesium);
-                console.log("🎬 Efectos cinematográficos aplicados");
+                // Configuración básica de iluminación
+                viewerScene.globe.enableLighting = true;
+                viewerScene.globe.atmosphereLightIntensity = 3.0;  // Reducido para ahorrar memoria
+                console.log("🎬 Iluminación básica aplicada");
 
-                // Optimizaciones finales
-                configurePerformanceOptimizations(cesiumViewer);
+                // Agregar ciudades básicas
+                await addCityMarkers(cesiumViewer, Cesium);
+                console.log("🏙️ Ciudades cargadas");
                 
-                // Centrado automático optimizado al cargar
-                const { setupCinematicEntrance } = await import('../utils/cesium.utils');
-                await setupCinematicEntrance(cesiumViewer, Cesium);
+                // Configurar controles básicos
+                setupInteractionEvents(cesiumViewer, Cesium);
+                configureAdvancedControls(cesiumViewer);
                 
-                console.log("🚀 Earth Pro Ultra listo");
+                // Configuración básica de cámara
+                setInitialCameraView((cesiumViewer as any).camera, Cesium, { 
+                    lon: 0, lat: 0, height: 15000000 
+                });
+                
+                console.log("🚀 Earth Pro Basic listo (optimizado memoria)");
                 setIsLoading(false);
 
             } catch (err: unknown) {

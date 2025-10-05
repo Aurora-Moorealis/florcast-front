@@ -21,7 +21,6 @@ const HowWork = forwardRef<HTMLElement, HowWorkProps>(({ className }, ref) => {
         />
         <h1 className="font-floral text-white text-3xl ml-4 tracking-wider">
           FLORCAST MAP
-          <span className="inline-block ml-4 animate-pulse">🌸</span>
         </h1>
       </div>
 

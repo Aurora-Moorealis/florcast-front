@@ -20,7 +20,7 @@ const MapGlobe: FC = () => {
             {isLoading && (
                 <LoadingOverlay 
                     title="FLORCAST Globe"
-                    subtitle="Inicializando globo..."
+                    subtitle="Optimizado para memoria - Inicializando..."
                     color="green"
                 />
             )}
@@ -28,6 +28,14 @@ const MapGlobe: FC = () => {
             {/* Panel lateral izquierdo - Filtro de rosas */}
             <FlowerFilterPanel className="absolute left-0 top-0" />
 
+            {/* Panel de información optimizada */}
+            <div className="absolute top-4 right-4 bg-black/80 backdrop-blur-md rounded-lg p-3 border border-green-400/50">
+                <div className="text-center">
+                    <div className="text-green-400 font-bold text-sm mb-1">🌍 FLORCAST Globe</div>
+                    <div className="text-xs text-gray-300">Modo Optimizado Memoria</div>
+                    <div className="text-xs text-green-300 mt-1">✅ WebAssembly Reducido</div>
+                </div>
+            </div>
 
             <div
                 ref={cesiumContainerRef}
