@@ -1,11 +1,12 @@
 import React from "react";
+import Images from "next/image";
 
 function Header() {
   return (
-    <header className="bg-blue-600 text-white shadow-md">
+    <header className="bg-[#054017]/90 text-white fixed top-0 left-0 right-0 z-100 shadow-md">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
-        <h1 className="text-2xl font-bold font-floral">FL<span>🌸</span>RCAST</h1>
+        <Images width={180} height={10} src='/logo.png' alt="Logo" />
 
         {/* Menú de navegación */}
         <nav>
@@ -16,13 +17,13 @@ function Header() {
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-gray-200">
-                MapaMundi
+              <a href="/map" className="hover:text-gray-200">
+                Map
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-gray-200">
-                Informacion
+              <a href="/about" className="hover:text-gray-200">
+                About Us
               </a>
             </li>
           </ul>
