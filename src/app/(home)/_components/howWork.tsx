@@ -89,7 +89,7 @@ const HowWork = forwardRef<HTMLElement, HowWorkProps>(({ className }, ref) => {
             <Images
               width={400}
               height={400}
-              src="/redFlower.jpg"
+              src="/redFLower.jpg"
               alt="Como funciona - Campo de flores"
               className="work-image rounded-lg shadow-2xl"
             />
@@ -103,7 +103,5 @@ const HowWork = forwardRef<HTMLElement, HowWorkProps>(({ className }, ref) => {
     </section>
   );
 });
-
-HowWork.displayName = "HowWork";
 
 export default HowWork;

@@ -18,7 +18,7 @@ const WhatAre = forwardRef<HTMLDivElement, WhatAreProps>(
       >
         <div className="flex-1">
           <h2 className="section-title text-[#366b2b] text-4xl font-second font-bold mb-6">
-            What is Bloom Watch?
+            What is BloomWatch?
           </h2>
           <p className="section-text text-black text-balance text-left mt-3 text-lg leading-relaxed">
             We are a project that combines science, technology and nature to
@@ -43,7 +43,7 @@ const WhatAre = forwardRef<HTMLDivElement, WhatAreProps>(
               height={400}
               src="/redFlower2.jpg"
               alt="Campo de flores - What we are"
-              className="section-image rounded-lg shadow-2xl transform hover:scale-105 transition-transform duration-300"
+              className="rounded-lg shadow-2xl transform hover:scale-105 transition-transform duration-300"
             />
             {/* Overlay decorativo */}
             <div className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-green-400 to-blue-500 rounded-full opacity-20 animate-pulse"></div>
