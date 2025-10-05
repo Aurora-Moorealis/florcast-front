@@ -286,7 +286,6 @@ export const getFlowerData = async (): Promise<Flower[]> => {
     return mockFlowerData;
 };
 
-// Función para buscar flores por filtros (simula endpoint de búsqueda)
 export const searchFlowers = async (filters: {
     category?: string;
     rarity?: string;
