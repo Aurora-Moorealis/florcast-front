@@ -11,7 +11,7 @@ export const teamMembers: TeamMember[] = [
         role: "UI/UX Designer"
     },
     {
-        imageUrl: "/about/Claudia.png",
+        imageUrl: "/about/claudia.png",
         name: "Claudia Ceballos M.",
         role: "UI/UX Designer"
     },
