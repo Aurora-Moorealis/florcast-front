@@ -19,8 +19,8 @@ import {
 } from '../utils/cesium.utils';
 
 /**
- * Hook para inicialización avanzada de Cesium Earth Pro
- * Incluye 6 ciudades interactivas y configuración completa
+ * Hook para Cesium Earth Pro Ultra con animaciones avanzadas
+ * Configuración optimizada y experiencia cinematográfica
  */
 export const useCesiumAdvanced = () => {
     const cesiumContainerRef = useRef<HTMLDivElement | null>(null);
@@ -34,69 +34,65 @@ export const useCesiumAdvanced = () => {
 
         const initializeCesium = async (): Promise<void> => {
             try {
-                console.log("🌍 Iniciando Cesium Earth Pro...");
+                console.log("🌍 Iniciando Earth Pro Ultra...");
                 
                 const Cesium = await import("cesium") as typeof import("cesium");
                 configureCesiumBase();
                 
                 if (!cesiumContainerRef.current) {
-                    throw new Error("Contenedor DOM no disponible para Earth Pro");
+                    throw new Error("Contenedor no disponible");
                 }
 
-                // Crear viewer con configuración avanzada
+                // Crear viewer con configuración premium
                 cesiumViewer = new Cesium.Viewer(
                     cesiumContainerRef.current, 
                     getAdvancedViewerConfig() as any
                 );
                 
                 setViewer(cesiumViewer);
-                console.log("✅ Viewer Earth Pro creado");
+                console.log("✅ Viewer Ultra creado");
 
-                // Configurar visuales de la escena
-                if (cesiumViewer) {
-                    configureSceneVisuals((cesiumViewer as any).scene);
-                    console.log("🎨 Visuales configurados");
-                }
+                // Configurar visuales mejorados
+                configureSceneVisuals((cesiumViewer as any).scene);
+                console.log("🎨 Visuales diurnos aplicados");
 
-                // Configurar terreno avanzado
-                if (cesiumViewer) {
-                    await setupAdvancedTerrain(cesiumViewer, Cesium);
-                    setTerrainLoaded(true);
-                    console.log("🏔️ Terreno HD cargado");
-                }
+                // Configuración de calidad ultra
+                const { configureUltraHighQuality, setupUltraHDTerrain, setupAdvancedAtmosphere } = await import('../utils/cesium.utils');
+                
+                configureUltraHighQuality(cesiumViewer, Cesium);
+                await setupUltraHDTerrain(cesiumViewer, Cesium);
+                setTerrainLoaded(true);
+                setupAdvancedAtmosphere(cesiumViewer, Cesium);
+                console.log("� Sistema ultra configurado");
 
-                // Agregar marcadores de ciudades
-                if (cesiumViewer) {
-                    await addCityMarkers(cesiumViewer, Cesium);
-                    console.log("🏙️ 6 ciudades añadidas");
-                }
+                // Agregar ciudades interactivas
+                await addCityMarkers(cesiumViewer, Cesium);
+                console.log("🏙️ Ciudades cargadas");
 
-                // Configurar vista inicial
-                if (cesiumViewer) {
-                    setInitialCameraView((cesiumViewer as any).camera, Cesium, { 
-                        lon: -73.98, lat: 40.75, height: 2000000 
-                    });
-                }
+                // Configurar controles y eventos mejorados
+                setupInteractionEvents(cesiumViewer, Cesium);
+                configureAdvancedControls(cesiumViewer);
+                
+                const { setupCityHoverAnimations } = await import('../utils/cesium.utils');
+                setupCityHoverAnimations(cesiumViewer, Cesium);
+                console.log("🎮 Controles y animaciones listos");
 
-                // Configurar eventos e interacciones
-                if (cesiumViewer) {
-                    setupInteractionEvents(cesiumViewer, Cesium);
-                    console.log("🖱️ Eventos configurados");
-                }
+                // Efectos cinematográficos
+                const { setupRealisticWaterEffects, setupParticleWeatherSystem, setupCinematicLighting } = await import('../utils/cesium.utils');
+                
+                setupRealisticWaterEffects(cesiumViewer, Cesium);
+                setupParticleWeatherSystem(cesiumViewer, Cesium);
+                setupCinematicLighting(cesiumViewer, Cesium);
+                console.log("🎬 Efectos cinematográficos aplicados");
 
-                // Configurar controles avanzados
-                if (cesiumViewer) {
-                    configureAdvancedControls(cesiumViewer);
-                    console.log("⚙️ Controles avanzados activos");
-                }
-
-                // Optimizaciones de rendimiento
-                if (cesiumViewer) {
-                    configurePerformanceOptimizations(cesiumViewer);
-                    console.log("⚡ Optimizaciones aplicadas");
-                }
-
-                console.log("🚀 Earth Pro inicializado completamente");
+                // Optimizaciones finales
+                configurePerformanceOptimizations(cesiumViewer);
+                
+                // Centrado automático optimizado al cargar
+                const { setupCinematicEntrance } = await import('../utils/cesium.utils');
+                await setupCinematicEntrance(cesiumViewer, Cesium);
+                
+                console.log("🚀 Earth Pro Ultra listo");
                 setIsLoading(false);
 
             } catch (err: unknown) {
@@ -109,8 +105,21 @@ export const useCesiumAdvanced = () => {
         return () => {
             try {
                 if (cesiumViewer && !(cesiumViewer as any).isDestroyed()) {
+                    // Limpiar post-processing stages antes de destruir
+                    if (cesiumViewer.scene?.postProcessStages) {
+                        cesiumViewer.scene.postProcessStages.removeAll();
+                        console.log("🧹 Post-processing stages limpiados");
+                    }
+                    
+                    // Limpiar primitivos (partículas, etc.)
+                    if (cesiumViewer.scene?.primitives) {
+                        cesiumViewer.scene.primitives.removeAll();
+                        console.log("🧹 Primitivos limpiados");
+                    }
+                    
+                    // Destruir el viewer
                     (cesiumViewer as any).destroy();
-                    console.log("🧹 Earth Pro limpiado");
+                    console.log("🧹 Earth Pro Ultra limpiado completamente");
                 }
             } catch (err) {
                 console.error("Error en cleanup:", err);

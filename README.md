@@ -1,7 +1,3 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
 First, run the development server:
 
 ```bash
@@ -19,6 +15,21 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+
+## 🗂️ Estructura de Componentes
+
+### 📁 Componentes UI Separados
+- **`FlowerFilterPanel.tsx`** - Panel lateral izquierdo independiente con sistema de filtros
+- **`GlobeUI.tsx`** - Componentes principales del globo (controles, paneles, indicadores)
+- **`QualityInfo.tsx`** - Información de calidad del renderizado
+- **`index.ts`** - Exportaciones centralizadas para imports limpios
+
+### 🌹 Panel de Filtros de Rosas
+- **Componente Modular**: Separado en su propio archivo para mejor mantenimiento
+- **24+ Rosas**: Base de datos extensa con diferentes categorías y rareza
+- **Filtros Avanzados**: Búsqueda, categoría y rareza
+- **Escalable**: Fácil agregar más rosas o funcionalidades
+- **Animaciones**: Efectos visuales completos y transiciones suaves
 
 ## Learn More
 

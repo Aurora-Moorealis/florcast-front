@@ -2,7 +2,8 @@
 
 import { FC } from "react";
 import { useCesiumAdvanced } from "./hooks/useCesium";
-import { ErrorDisplay, LoadingOverlay, GlobeHeader, InfoPanel, PanelRight } from "./ui/GlobeUI";
+import { ErrorDisplay, LoadingOverlay, GlobeHeader, InfoPanel, SpecialEffectsControls } from "./ui/GlobeUI";
+import FlowerFilterPanel from "./ui/FlowerFilterPanel";
 /**
  * Componente Avanzado del Globo 3D con CesiumJS
  * Incluye 6 ciudades interactivas y configuración completa
@@ -16,14 +17,6 @@ const MapGlobe: FC = () => {
 
     return (
         <div className="w-full h-screen relative">
-            <GlobeHeader 
-                title="FLORCAST Globe"
-                subtitle={isLoading ? "Cargando globo" : "Dsc"}
-                icon="🌍"
-                isLoading={isLoading}
-                color="purple"
-            />
-
             {isLoading && (
                 <LoadingOverlay 
                     title="FLORCAST Globe"
@@ -32,20 +25,9 @@ const MapGlobe: FC = () => {
                 />
             )}
 
-            <PanelRight
-                 
-            
-            />
+            {/* Panel lateral izquierdo - Filtro de rosas */}
+            <FlowerFilterPanel className="absolute left-0 top-0" />
 
-            <InfoPanel 
-                items={[
-                    { label: "Ciudades", value: "6", color: "text-purple-400" },
-                    { label: "Terreno", value: "HD", color: "text-green-400" },
-                    { label: "Estado", value: "Activo", color: "text-blue-400" }
-                ]}
-            />
-
-            
 
             <div
                 ref={cesiumContainerRef}
