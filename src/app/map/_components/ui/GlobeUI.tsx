@@ -1,12 +1,7 @@
-/**
- * Componentes UI para los globos de Cesium
- * Interfaces de usuario reutilizables
- */
 
 import { FC } from 'react';
 import { Rose } from 'lucide-react'
 
-// Componente de carga
 interface LoadingOverlayProps {
     title: string;
     subtitle: string;
@@ -40,13 +35,10 @@ export const LoadingOverlay: FC<LoadingOverlayProps> = ({
     );
 };
 
-// Componente de error
 interface ErrorDisplayProps {
     error: string;
     title?: string;
 }
-
-// Componente de controles de efectos especiales
 interface SpecialEffectsControlsProps {
     className?: string;
 }
@@ -304,20 +296,9 @@ interface PanelRightProps {
 
 export const PanelRight: FC<PanelRightProps> = ({ 
     title = 'Flores',
-    color = 'red',
     icon = '🌹',
     children
 }) => {
-    const colorClasses = {
-        blue: 'from-blue-900/80 to-blue-800/80 border-blue-500/30 text-blue-300',
-        green: 'from-green-900/80 to-green-800/80 border-green-500/30 text-green-300',
-        purple: 'from-purple-900/80 to-purple-800/80 border-purple-500/30 text-purple-300',
-        red: 'from-red-900/80 to-red-800/80 border-red-500/30 text-red-300'
-    };
-
-    const colors = colorClasses[color];
-
-    // Array de ejemplo de flores con diferentes colores
     const flowerItems = [
         { color: '#ff6b6b', name: 'Rosa Roja' },
         { color: '#4ecdc4', name: 'Rosa Azul' },
@@ -490,7 +471,6 @@ export const FlowerInfoPanel: FC<FlowerInfoPanelProps> = ({
     );
 };
 
-// Componente de controles de navegación
 interface NavigationControlsProps {
     onCenterView?: () => void;
     onGoHome?: () => void;
@@ -498,8 +478,7 @@ interface NavigationControlsProps {
 }
 
 export const NavigationControls: FC<NavigationControlsProps> = ({ 
-    onCenterView, 
-    onGoHome,
+    onCenterView,
     className = "" 
 }) => {
     const handleGoHome = () => {
@@ -508,7 +487,6 @@ export const NavigationControls: FC<NavigationControlsProps> = ({
 
     return (
         <div className={`fixed top-4 right-4 z-30 flex flex-col gap-2 ${className}`}>
-            {/* Botón de centrar vista */}
             <button
                 onClick={onCenterView}
                 className="
@@ -534,7 +512,6 @@ export const NavigationControls: FC<NavigationControlsProps> = ({
                 </svg>
             </button>
 
-            {/* Botón de ir al home */}
             <button
                 onClick={handleGoHome}
                 className="

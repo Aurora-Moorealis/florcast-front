@@ -173,7 +173,6 @@ const getFlowerColor = (commonName: string, Cesium: any): any => {
  */
 const determineFlowerRarity = (flower: Flower): string => {
     const rareFamilies = ['Orchidaceae', 'Strelitziaceae', 'Theaceae'];
-    const commonFamilies = ['Asteraceae', 'Fabaceae'];
     const isHighMountain = flower.description.toLowerCase().includes('mountain') || 
                           flower.description.toLowerCase().includes('alpine') ||
                           flower.location_name.toLowerCase().includes('everest') ||
@@ -388,7 +387,6 @@ export const updatePointVisibility = (viewer: unknown, Cesium: unknown): void =>
         if (!viewer) return;
         
         const camera = (viewer as any).camera;
-        const scene = (viewer as any).scene;
         const entities = (viewer as any).entities.values;
         
         entities.forEach((entity: any) => {
@@ -419,7 +417,7 @@ export const updatePointVisibility = (viewer: unknown, Cesium: unknown): void =>
 /**
  * Configurar oclusión y visibilidad de puntos
  */
-export const configurePointOcclusion = (viewer: unknown, Cesium: unknown): void => {
+export const configurePointOcclusion = (viewer: unknown): void => {
     try {
         const scene = (viewer as any).scene;
         
@@ -714,11 +712,10 @@ export const handleCesiumError = (error: unknown, setError: (error: string) => v
 export const setupAdvancedTerrain = async (viewer: unknown, Cesium: unknown): Promise<boolean> => {
     try {
         if (typeof (Cesium as any).createWorldTerrainAsync === 'function') {
-            const worldTerrain = await (Cesium as any).createWorldTerrainAsync({
+            (viewer as any).terrainProvider = await (Cesium as any).createWorldTerrainAsync({
                 requestWaterMask: true,
                 requestVertexNormals: true
             });
-            (viewer as any).terrainProvider = await (Cesium as any).createWorldTerrainAsync();
             return true;
         }
         return false;
@@ -913,7 +910,7 @@ export const setupUltraHDTerrain = async (viewer: unknown, Cesium: unknown): Pro
 /**
  * Implementar efectos de agua realistas
  */
-export const setupRealisticWaterEffects = (viewer: unknown, Cesium: unknown): void => {
+export const setupRealisticWaterEffects = (viewer: unknown): void => {
     try {
         const scene = (viewer as any).scene;
         const globe = scene.globe;
@@ -939,7 +936,7 @@ export const setupRealisticWaterEffects = (viewer: unknown, Cesium: unknown): vo
 /**
  * Sistema de partículas para efectos climáticos
  */
-export const setupParticleWeatherSystem = (viewer: unknown, Cesium: unknown): void => {
+export const setupParticleWeatherSystem = (): void => {
     try {
         console.log("☁️ Sistema de partículas preparado (modo simplificado)");
         // Sistema simplificado para evitar problemas de duplicación

@@ -5,7 +5,7 @@ import type { FC } from 'react';
 import { Search, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Flower as FlowerIcon } from 'lucide-react';
 import { Flower } from '../types/flowers';
-import { FlowerFilter, FlowerSearchParams } from '../types/interfaces';
+import { FlowerFilter } from '../types/interfaces';
 import { mockFlowerData } from '../../../../data/flower';
 
 // Interfaces adicionales para el UI
@@ -65,7 +65,6 @@ const flowerColorMap: Record<string, string> = {
 const determineRarity = (flower: Flower): string => {
     // Como la API envía growth_rate = 0, usamos otros criterios
     const rareFamilies = ['Orchidaceae', 'Strelitziaceae', 'Theaceae'];
-    const commonFamilies = ['Asteraceae', 'Fabaceae'];
     const isHighMountain = flower.description.toLowerCase().includes('mountain') || 
                           flower.description.toLowerCase().includes('alpine') ||
                           flower.location_name.toLowerCase().includes('everest') ||

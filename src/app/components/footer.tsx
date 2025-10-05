@@ -3,15 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { 
   SiInstagram, 
-  SiX, 
-  SiFacebook, 
-  SiLinkedin,
   SiGithub
 } from "react-icons/si";
 import { 
-  FaYoutube, 
   FaEnvelope, 
-  FaPhone, 
   FaMapMarkerAlt,
   FaLeaf,
   FaHeart,

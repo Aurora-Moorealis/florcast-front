@@ -1,8 +1,6 @@
 import { Flower } from '../app/map/_components/types/flowers';
 
-// Datos de prueba para flores que coinciden con el formato de la API
 export const mockFlowerData: Flower[] = [
-    // Datos que coinciden exactamente con el formato de la API
     {
         id: 1,
         scientific_name: "Rosa gallica",
@@ -279,27 +277,25 @@ export const mockFlowerData: Flower[] = [
     }
 ];
 
-// Función para obtener datos de flores (simula una llamada a API)
 export const getFlowerData = async (): Promise<Flower[]> => {
-    // Simular delay de API
     await new Promise(resolve => setTimeout(resolve, 1000));
     return mockFlowerData;
 };
 
-export const searchFlowers = async (filters: {
-    category?: string;
-    rarity?: string;
-    location?: string;
-    bloom_season?: string;
-}): Promise<Flower[]> => {
-    await new Promise(resolve => setTimeout(resolve, 500));
+// export const searchFlowers = async (filters: {
+//     category?: string;
+//     rarity?: string;
+//     location?: string;
+//     bloom_season?: string;
+// }): Promise<Flower[]> => {
+//     await new Promise(resolve => setTimeout(resolve, 500));
     
-    return mockFlowerData.filter(flower => {
-        // Aquí podrías implementar la lógica de filtrado
-        // Por ahora devuelve todos los datos
-        return true;
-    });
-};
+//     return mockFlowerData.filter(flower => {
+//         // Aquí podrías implementar la lógica de filtrado
+//         // Por ahora devuelve todos los datos
+//         return true;
+//     });
+// };
 
 // Función para obtener una flor por ID
 export const getFlowerById = async (id: number): Promise<Flower | null> => {

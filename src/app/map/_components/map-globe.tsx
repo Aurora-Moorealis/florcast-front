@@ -1,8 +1,8 @@
 "use client";
 
-import { FC, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useCesiumAdvanced } from "./hooks/useCesium";
-import { ErrorDisplay, LoadingOverlay, GlobeHeader, InfoPanel, SpecialEffectsControls, FlowerInfoPanel, NavigationControls } from "./ui/GlobeUI";
+import { ErrorDisplay, LoadingOverlay, FlowerInfoPanel, NavigationControls } from "./ui/GlobeUI";
 import FlowerFilterPanel from "./ui/FlowerFilterPanel";
 import { Flower } from "./types/flowers";
 import { FlowerFilter } from "./types/interfaces";
@@ -12,10 +12,10 @@ import { FlowerFilter } from "./types/interfaces";
  * Con movimientos suaves, oclusión de puntos e información interactiva
  */
 const MapGlobe = () => {
-    const [flowers, setFlowers] = useState<Flower[]>([]);
+    const [flowers] = useState<Flower[]>([]);
     const [selectedFlower, setSelectedFlower] = useState<any>(null);
     const [hoveredFlower, setHoveredFlower] = useState<any>(null);
-    const [currentFilters, setCurrentFilters] = useState<FlowerFilter>({});
+    const [, setCurrentFilters] = useState<FlowerFilter>({});
 
     // Callbacks para eventos de interacción con flores
     const handleFlowerHover = useCallback((flower: any) => {
