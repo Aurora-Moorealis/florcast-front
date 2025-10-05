@@ -2,37 +2,44 @@ export interface TeamMember {
     imageUrl: string;
     name: string;
     role: string;
+    gmail?: string;
 }
 
 export const teamMembers: TeamMember[] = [
     {
-        imageUrl: "/about/Esteysi.png",
+        imageUrl: "/about/Andrea.png",
         name: "Andrea E. Rosario M.",
-        role: "Project Lead"
+        role: "UI/UX Designer",
+        gmail: "andreaesteissyrm@gmail.com"
     },
     {
-        imageUrl: "/about/Claudia.png",
+        imageUrl: "/about/claudia.png",
         name: "Claudia Ceballos M.",
-        role: "UI/UX Designer"
+        role: "UI/UX Designer",
+        gmail: "claudiaceballosmatos@gmail.com"
     },
     {
-        imageUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
+        imageUrl: "/about/Enmanuel.png",
         name: "Emmanuel S. Germosen D.",
-        role: "Backend Developer"
+        role: "Backend Developer",
+        gmail: "starlinenmanuelg@gmail.com"
     },
     {
-        imageUrl: "https://cdn.pixabay.com/photo/2013/07/13/10/07/man-156584_1280.png",
+        imageUrl: "/about/Ian.png",
         name: "Ian Pichardo M.",
-        role: "Data Scientist"
+        role: "Backend Developer",
+        gmail: "ian.pichardo@hotmail.com"
     },
     {
-        imageUrl: "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?w=400&h=400&fit=crop&crop=face",
+        imageUrl: "/about/kirk.png",
         name: "Mijael K. Rondon A.",
-        role: "DevOps Engineer"
+        role: "Frontend Developer",
+        gmail: "mrondonb01@gmail.com"
     },
     {
-        imageUrl: "https://imgs.search.brave.com/iPcv-LXPW3sQjdVIxUmj-gbNODUIZFvq5spLyBh1f9c/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/dmVjdG9yLXByZW1p/dW0vcmV0cmF0by1v/LWNhYmV6YS1uaW5v/LXBlcXVlbm8tY2Fi/ZWxsby1tYXJyb25f/Njg0MDU4LTI0Mjcu/anBnP3NlbXQ9YWlz/X2l0ZW1zX2Jvb3N0/ZWQmdz03NDA",
+        imageUrl: "/about/Ramerlin.png",
         name: "Ramerlin J. Castillo R.",
-        role: "Full Stack Developer"
+        role: "Frontend Developer",
+        gmail: "ramerlint2008@gmail.com"
     }
-];
+]

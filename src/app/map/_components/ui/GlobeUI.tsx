@@ -46,22 +46,156 @@ interface ErrorDisplayProps {
     title?: string;
 }
 
+// Componente de controles de efectos especiales
+interface SpecialEffectsControlsProps {
+    className?: string;
+}
+
+export const SpecialEffectsControls: FC<SpecialEffectsControlsProps> = ({ className }) => {
+    const effects = [
+        { key: 'R', name: 'Lluvia', icon: '🌧️', description: 'Activar/desactivar lluvia' },
+        { key: 'S', name: 'Nieve', icon: '❄️', description: 'Activar/desactivar nieve' },
+        { key: 'A', name: 'Aurora', icon: '🌌', description: 'Activar/desactivar aurora boreal' },
+        { key: 'M', name: 'Meteoros', icon: '☄️', description: 'Activar/desactivar lluvia de meteoros' }
+    ];
+
+    const timeStatus = { name: 'Tiempo: Fijo (Día)', icon: '☀️', description: 'Iluminación diurna permanente' };
+
+    return (
+        <div className={`absolute top-4 right-4 bg-black/90 backdrop-blur-md rounded-lg p-4 border border-gray-700 max-w-xs ${className || ''}`}>
+            <h3 className="text-white font-bold mb-3 flex items-center gap-2">
+                � Experiencia Ultra
+            </h3>
+
+            <div className="space-y-2">
+                <h4 className="text-sm font-semibold text-yellow-300 mb-2">Efectos Especiales (Teclado)</h4>
+                {effects.map((effect) => (
+                    <div key={effect.key} className="flex items-center gap-3 text-sm text-gray-300 hover:text-white transition-colors">
+                        <span className="w-6 h-6 bg-gray-800 rounded flex items-center justify-center text-xs font-bold text-yellow-400 border border-gray-600">
+                            {effect.key}
+                        </span>
+                        <span className="text-lg">{effect.icon}</span>
+                        <span className="flex-1">{effect.name}</span>
+                    </div>
+                ))}
+                
+                {/* Estado del tiempo fijo */}
+                <div className="flex items-center gap-3 text-sm text-green-300 bg-green-900/20 rounded p-2 border border-green-700/50">
+                    <span className="w-6 h-6 bg-green-800 rounded flex items-center justify-center text-xs font-bold text-yellow-300 border border-green-600">
+                        ☀
+                    </span>
+                    <span className="text-lg">{timeStatus.icon}</span>
+                    <span className="flex-1">{timeStatus.name}</span>
+                </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-gray-700">
+                <p className="text-xs text-gray-400">
+                    🎮 Presiona las teclas para efectos especiales
+                </p>
+                <p className="text-xs text-green-400 mt-1">
+                    ☀️ Iluminación diurna permanente
+                </p>
+                <p className="text-xs text-blue-400 mt-1">
+                    🎬 Calidad ultra + animaciones cinemáticas
+                </p>
+            </div>
+        </div>
+    );
+};
+
 export const ErrorDisplay: FC<ErrorDisplayProps> = ({ 
     error, 
     title = "Error Cesium" 
-}) => (
-    <div className="w-full h-screen bg-red-900 flex items-center justify-center">
-        <div className="text-white text-center p-8 bg-red-800/50 rounded-lg max-w-md">
-            <h2 className="text-2xl font-bold mb-4">❌ {title}</h2>
-            <p className="text-red-200 mb-4">{error}</p>
-            <div className="text-sm text-red-300 text-left">
-                <p>• Verifica la conexión a internet</p>
-                <p>• Comprueba que Cesium esté instalado</p>
-                <p>• Revisa la consola del navegador</p>
+}) => {
+    const isWebAssemblyError = error.toLowerCase().includes('webassembly');
+    const isNetworkError = error.toLowerCase().includes('network') || error.toLowerCase().includes('fetch');
+    const isMemoryError = error.toLowerCase().includes('memory');
+
+    const handleReload = () => {
+        window.location.reload();
+    };
+
+    const handleCheckBrowser = () => {
+        const info = {
+            userAgent: navigator.userAgent,
+            webAssembly: typeof WebAssembly !== 'undefined',
+            webGL: !!document.createElement('canvas').getContext('webgl'),
+            memoryInfo: (performance as any).memory ? {
+                usedJSHeapSize: (performance as any).memory.usedJSHeapSize,
+                totalJSHeapSize: (performance as any).memory.totalJSHeapSize,
+                jsHeapSizeLimit: (performance as any).memory.jsHeapSizeLimit
+            } : 'No disponible'
+        };
+        console.log('🔍 Diagnóstico del navegador:', info);
+        alert(`WebAssembly: ${info.webAssembly ? '✅' : '❌'}\nWebGL: ${info.webGL ? '✅' : '❌'}\nMemoria: ${JSON.stringify(info.memoryInfo, null, 2)}`);
+    };
+
+    return (
+        <div className="w-full h-screen bg-gradient-to-br from-red-900 to-red-800 flex items-center justify-center p-4">
+            <div className="text-white text-center p-8 bg-black/40 backdrop-blur-md rounded-2xl max-w-2xl border border-red-500/30">
+                <div className="text-6xl mb-4">🚨</div>
+                <h2 className="text-3xl font-bold mb-4 text-red-300">{title}</h2>
+                
+                <div className="bg-red-900/50 rounded-lg p-4 mb-6 border border-red-500/30">
+                    <p className="text-red-200 font-mono text-sm break-words">{error}</p>
+                </div>
+
+                {isWebAssemblyError && (
+                    <div className="bg-yellow-900/50 rounded-lg p-4 mb-4 border border-yellow-500/30">
+                        <h3 className="text-yellow-300 font-semibold mb-2">🔧 Error de WebAssembly</h3>
+                        <div className="text-yellow-200 text-sm text-left space-y-1">
+                            <p>• Tu navegador puede no soportar WebAssembly</p>
+                            <p>• Intenta con Chrome, Firefox, Safari o Edge actualizados</p>
+                            <p>• Verifica que tengas memoria suficiente disponible</p>
+                        </div>
+                    </div>
+                )}
+
+                {isNetworkError && (
+                    <div className="bg-blue-900/50 rounded-lg p-4 mb-4 border border-blue-500/30">
+                        <h3 className="text-blue-300 font-semibold mb-2">🌐 Error de Red</h3>
+                        <div className="text-blue-200 text-sm text-left space-y-1">
+                            <p>• Verifica tu conexión a internet</p>
+                            <p>• El CDN de Cesium puede estar temporalmente no disponible</p>
+                            <p>• Intenta desactivar bloquedores de anuncios</p>
+                        </div>
+                    </div>
+                )}
+
+                {isMemoryError && (
+                    <div className="bg-purple-900/50 rounded-lg p-4 mb-4 border border-purple-500/30">
+                        <h3 className="text-purple-300 font-semibold mb-2">💾 Error de Memoria</h3>
+                        <div className="text-purple-200 text-sm text-left space-y-1">
+                            <p>• Cierra otras pestañas del navegador</p>
+                            <p>• Reinicia el navegador</p>
+                            <p>• Intenta con un dispositivo con más memoria</p>
+                        </div>
+                    </div>
+                )}
+
+                <div className="flex flex-col sm:flex-row gap-4 mt-6">
+                    <button
+                        onClick={handleReload}
+                        className="flex-1 bg-red-600 hover:bg-red-500 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                    >
+                        🔄 Recargar Página
+                    </button>
+                    <button
+                        onClick={handleCheckBrowser}
+                        className="flex-1 bg-gray-600 hover:bg-gray-500 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                    >
+                        🔍 Diagnóstico
+                    </button>
+                </div>
+
+                <div className="text-xs text-gray-400 mt-4 text-left bg-gray-900/50 rounded p-3">
+                    <p><strong>Navegadores Recomendados:</strong> Chrome 89+, Firefox 88+, Safari 14+, Edge 89+</p>
+                    <p><strong>Requisitos:</strong> WebAssembly, WebGL, 2GB RAM disponibles</p>
+                </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 // Header del globo
 interface GlobeHeaderProps {
@@ -161,14 +295,6 @@ export const ViewControlButton: FC<ViewControlButtonProps> = ({
         </div>
     </div>
 );
-
-// Indicador de TypeScript
-export const TypeScriptIndicator = () => (
-    <div className="absolute bottom-4 right-4 z-50 bg-blue-900/80 text-white px-3 py-2 rounded-lg text-xs font-mono backdrop-blur">
-        <span className="text-blue-300">TypeScript</span> ✅
-    </div>
-);
-
 interface PanelRightProps {
     title?: string;
     color?: 'blue' | 'green' | 'purple' | 'red';
@@ -229,6 +355,210 @@ export const PanelRight: FC<PanelRightProps> = ({
                     </div>
                 )}
             </div>
+        </div>
+    );
+};
+
+// Componente de panel de información para flores enfocadas
+interface FlowerInfoPanelProps {
+    flower?: {
+        id: number;
+        common_name: string;
+        scientific_name: string;
+        family: string;
+        description: string;
+        height: number;
+        bloom_season: string[] | string;
+        location_name: string;
+        rarity?: string;
+        category?: string;
+    } | null;
+    isVisible?: boolean;
+    className?: string;
+}
+
+export const FlowerInfoPanel: FC<FlowerInfoPanelProps> = ({ 
+    flower, 
+    isVisible = false, 
+    className = "" 
+}) => {
+    if (!isVisible || !flower) {
+        return null;
+    }
+
+    const getRarityColor = (rarity: string) => {
+        switch (rarity) {
+            case 'legendaria': return 'text-amber-300 bg-amber-500/20 border-amber-500/30';
+            case 'exótica': return 'text-purple-300 bg-purple-500/20 border-purple-500/30';
+            case 'rara': return 'text-blue-300 bg-blue-500/20 border-blue-500/30';
+            default: return 'text-green-300 bg-green-500/20 border-green-500/30';
+        }
+    };
+
+    const getCategoryColor = (category: string) => {
+        switch (category) {
+            case 'mágica': return 'text-purple-300 bg-purple-500/10';
+            case 'tropical': return 'text-orange-300 bg-orange-500/10';
+            case 'exótica': return 'text-pink-300 bg-pink-500/10';
+            case 'antigua': return 'text-yellow-300 bg-yellow-500/10';
+            default: return 'text-gray-300 bg-gray-500/10';
+        }
+    };
+
+    return (
+        <div className={`
+            fixed top-32 right-4 z-30
+            bg-black/90 backdrop-blur-md rounded-2xl border border-white/20
+            p-6 max-w-md w-80 shadow-2xl
+            animate-in fade-in slide-in-from-right-4 duration-300
+            ${className}
+        `}>
+            {/* Header con nombre */}
+            <div className="text-center mb-4">
+                <h2 className="text-2xl font-bold text-white mb-1">
+                    {flower.common_name}
+                </h2>
+                <p className="text-sm italic text-gray-300">
+                    {flower.scientific_name}
+                </p>
+            </div>
+
+            {/* Badges de categoría y rareza */}
+            <div className="flex justify-center gap-3 mb-4">
+                {flower.rarity && (
+                    <span className={`
+                        px-3 py-1 rounded-full text-xs font-semibold border
+                        ${getRarityColor(flower.rarity)}
+                    `}>
+                        {flower.rarity.toUpperCase()}
+                    </span>
+                )}
+                {flower.category && (
+                    <span className={`
+                        px-3 py-1 rounded-full text-xs font-semibold
+                        ${getCategoryColor(flower.category)}
+                    `}>
+                        {flower.category}
+                    </span>
+                )}
+            </div>
+
+            {/* Información detallada */}
+            <div className="space-y-3 text-sm">
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <span className="text-gray-400">Familia:</span>
+                        <p className="text-white font-medium">{flower.family}</p>
+                    </div>
+                    <div>
+                        <span className="text-gray-400">Altura:</span>
+                        <p className="text-white font-medium">{flower.height} cm</p>
+                    </div>
+                </div>
+
+                <div>
+                    <span className="text-gray-400">Temporada:</span>
+                    <p className="text-white font-medium">
+                        {Array.isArray(flower.bloom_season) 
+                            ? flower.bloom_season.join(', ') 
+                            : flower.bloom_season}
+                    </p>
+                </div>
+
+                <div>
+                    <span className="text-gray-400">Ubicación:</span>
+                    <p className="text-white font-medium flex items-center gap-1">
+                        <span>📍</span>
+                        {flower.location_name}
+                    </p>
+                </div>
+
+                <div className="pt-2 border-t border-white/20">
+                    <p className="text-gray-300 leading-relaxed">
+                        {flower.description}
+                    </p>
+                </div>
+            </div>
+
+            {/* Indicador de cierre */}
+            <div className="text-center mt-4 pt-3 border-t border-white/20">
+                <p className="text-xs text-gray-400">
+                    Haz clic en otra área para cerrar
+                </p>
+            </div>
+        </div>
+    );
+};
+
+// Componente de controles de navegación
+interface NavigationControlsProps {
+    onCenterView?: () => void;
+    onGoHome?: () => void;
+    className?: string;
+}
+
+export const NavigationControls: FC<NavigationControlsProps> = ({ 
+    onCenterView, 
+    onGoHome,
+    className = "" 
+}) => {
+    const handleGoHome = () => {
+        window.location.href = '/';
+    };
+
+    return (
+        <div className={`fixed top-4 right-4 z-30 flex flex-col gap-2 ${className}`}>
+            {/* Botón de centrar vista */}
+            <button
+                onClick={onCenterView}
+                className="
+                    bg-black/90 backdrop-blur-md hover:bg-black/80
+                    text-white p-3 rounded-xl border border-white/20
+                    shadow-lg transition-all duration-200 hover:scale-105
+                    group
+                "
+                title="Centrar vista"
+            >
+                <svg 
+                    className="w-6 h-6 group-hover:text-blue-400 transition-colors" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                >
+                    <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={2} 
+                        d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" 
+                    />
+                </svg>
+            </button>
+
+            {/* Botón de ir al home */}
+            <button
+                onClick={handleGoHome}
+                className="
+                    bg-black/90 backdrop-blur-md hover:bg-black/80
+                    text-white p-3 rounded-xl border border-white/20
+                    shadow-lg transition-all duration-200 hover:scale-105
+                    group
+                "
+                title="Ir al inicio"
+            >
+                <svg 
+                    className="w-6 h-6 group-hover:text-green-400 transition-colors" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                >
+                    <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={2} 
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" 
+                    />
+                </svg>
+            </button>
         </div>
     );
 };
