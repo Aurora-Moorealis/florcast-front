@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useCesiumAdvanced } from "./hooks/useCesium";
 import { ErrorDisplay, LoadingOverlay, FlowerInfoPanel, NavigationControls } from "./ui/GlobeUI";
 import FlowerFilterPanel from "./ui/FlowerFilterPanel";
@@ -33,6 +33,28 @@ const MapGlobe = () => {
         onFlowerClick: handleFlowerClickFromMap
     });
 
+    // Callback para centrar la vista (misma función que usa el botón)
+    const handleCenterView = useCallback(async () => {
+        if (viewer) {
+            try {
+                const Cesium = await import('cesium');
+                // Centrar en la vista global inicial
+                viewer.camera.flyTo({
+                    destination: Cesium.Cartesian3.fromDegrees(0.0, 20.0, 12000000),
+                    orientation: {
+                        heading: Cesium.Math.toRadians(0.0),
+                        pitch: Cesium.Math.toRadians(-90.0),
+                        roll: 0.0
+                    },
+                    duration: 3.0
+                });
+                console.log('🎯 Vista centrada automáticamente');
+            } catch (error) {
+                console.error('Error centrando vista:', error);
+            }
+        }
+    }, [viewer]);
+
     // Callback para cuando se selecciona una flor
     const handleFlowerSelect = useCallback((flower: any) => {
         setSelectedFlower(flower);
@@ -56,27 +78,19 @@ const MapGlobe = () => {
         // Aquí puedes agregar lógica para filtrar flores en el mapa
     }, []);
 
-    // Callback para centrar la vista
-    const handleCenterView = useCallback(async () => {
-        if (viewer) {
-            try {
-                const Cesium = await import('cesium');
-                // Centrar en la vista global inicial
-                viewer.camera.flyTo({
-                    destination: Cesium.Cartesian3.fromDegrees(0.0, 20.0, 12000000),
-                    orientation: {
-                        heading: Cesium.Math.toRadians(0.0),
-                        pitch: Cesium.Math.toRadians(-90.0),
-                        roll: 0.0
-                    },
-                    duration: 3.0
-                });
-                console.log('🎯 Vista centrada');
-            } catch (error) {
-                console.error('Error centrando vista:', error);
-            }
+    // Ejecutar centrado automático cuando el viewer esté listo
+    useEffect(() => {
+        if (viewer && !isLoading) {
+            console.log('🚀 Preparando centrado automático del globo...');
+            // Ejecutar la misma función del botón después de un breve delay
+            const timer = setTimeout(() => {
+                console.log('⚡ Ejecutando centrado automático (misma función que el botón)');
+                handleCenterView();
+            }, 2000); // 2 segundos después de que termine la carga
+            
+            return () => clearTimeout(timer);
         }
-    }, [viewer]);
+    }, [viewer, isLoading, handleCenterView]);
 
     if (error) {
         return <ErrorDisplay error={error} title="Error MapGlobe Advanced" />;

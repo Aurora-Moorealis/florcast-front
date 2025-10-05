@@ -318,4 +318,19 @@ export const getFlowerStatistics = async () => {
     };
 };
 
+// Función para calcular el centro geográfico de todas las flores
+export const calculateFlowersCenter = (): { lon: number, lat: number } => {
+    if (mockFlowerData.length === 0) {
+        return { lon: 0, lat: 0 };
+    }
+    
+    const totalLat = mockFlowerData.reduce((sum, flower) => sum + flower.latitude, 0);
+    const totalLon = mockFlowerData.reduce((sum, flower) => sum + flower.longitude, 0);
+    
+    return {
+        lat: totalLat / mockFlowerData.length,
+        lon: totalLon / mockFlowerData.length
+    };
+};
+
 export default mockFlowerData;

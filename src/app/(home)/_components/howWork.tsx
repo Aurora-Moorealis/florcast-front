@@ -10,7 +10,6 @@ interface HowWorkProps {
 const HowWork = forwardRef<HTMLElement, HowWorkProps>(({ className }, ref) => {
   return (
     <section ref={ref} className={className}>
-      {/* Header con animación */}
       <div className="work-header flex items-center my-6 px-10 bg-gradient-to-r from-[#307b8e] to-[#4a9bb8] text-center py-6 rounded-lg mx-6 shadow-xl">
         <Image
           width={48}
@@ -91,7 +90,7 @@ const HowWork = forwardRef<HTMLElement, HowWorkProps>(({ className }, ref) => {
               height={400}
               src="/redFLower.jpg"
               alt="Como funciona - Campo de flores"
-              className="work-image rounded-lg shadow-2xl"
+              className="rounded-lg shadow-2xl"
             />
             {/* Elementos decorativos flotantes */}
             <div className="absolute -top-6 -right-6 w-12 h-12 bg-gradient-to-r from-green-400 to-blue-500 rounded-full animate-bounce opacity-60"></div>

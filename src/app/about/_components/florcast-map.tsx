@@ -88,7 +88,7 @@ const FlorcastMap = forwardRef<HTMLElement, FlorcastMapProps>(
                 height={400}
                 src="/pinkFlower2.jpg"
                 alt="Campo de flores - Quienes somos"
-                className="map-element rounded-lg shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-105"
+                className=""
               />
 
               {/* Elementos decorativos flotantes */}

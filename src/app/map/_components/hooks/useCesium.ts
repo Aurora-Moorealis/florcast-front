@@ -135,7 +135,7 @@ export const useCesiumAdvanced = (callbacks?: {
                     callbacks?.onFlowerClick
                 );
                 
-                // Configuración básica de cámara
+                // Configuración básica de cámara (vista inicial)
                 setInitialCameraView((cesiumViewer as any).camera, Cesium, { 
                     lon: 0, lat: 0, height: 15000000 
                 });

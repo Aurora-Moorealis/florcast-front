@@ -642,6 +642,50 @@ export const setInitialCameraView = (camera: unknown, Cesium: unknown, coordinat
 };
 
 /**
+ * Centrar el globo automáticamente en todas las flores usando flyTo suave
+ */
+export const centerGlobeOnFlowers = (viewer: unknown, Cesium: unknown, flowers: any[]): void => {
+    try {
+        if (!flowers || flowers.length === 0) {
+            console.warn('No hay flores para centrar el globo');
+            return;
+        }
+
+        // Calcular el centro geográfico de las flores
+        const totalLat = flowers.reduce((sum: number, flower: any) => sum + flower.latitude, 0);
+        const totalLon = flowers.reduce((sum: number, flower: any) => sum + flower.longitude, 0);
+        const centerLat = totalLat / flowers.length;
+        const centerLon = totalLon / flowers.length;
+
+        // Calcular la altura apropiada basada en la dispersión de las flores
+        const latitudes = flowers.map((f: any) => f.latitude);
+        const longitudes = flowers.map((f: any) => f.longitude);
+        const latRange = Math.max(...latitudes) - Math.min(...latitudes);
+        const lonRange = Math.max(...longitudes) - Math.min(...longitudes);
+        const maxRange = Math.max(latRange, lonRange);
+        
+        // Altura basada en la dispersión (más dispersión = mayor altura)
+        const height = Math.max(8000000, maxRange * 150000);
+
+        console.log(`🌍 Centrando globo en: lat=${centerLat.toFixed(2)}, lon=${centerLon.toFixed(2)}, altura=${height.toFixed(0)}m`);
+
+        // Usar flyTo para un movimiento suave
+        (viewer as any).camera.flyTo({
+            destination: (Cesium as any).Cartesian3.fromDegrees(centerLon, centerLat, height),
+            orientation: {
+                heading: (Cesium as any).Math.toRadians(0.0),
+                pitch: (Cesium as any).Math.toRadians(-45.0),
+                roll: 0.0
+            },
+            duration: 3.0, // 3 segundos de animación suave
+            easingFunction: (Cesium as any).EasingFunction.QUADRATIC_OUT
+        });
+    } catch (error) {
+        console.error('Error centrando el globo en las flores:', error);
+    }
+};
+
+/**
  * Configurar escena visual - Modo diurno fijo
  */
 export const configureSceneVisuals = (scene: unknown): void => {
