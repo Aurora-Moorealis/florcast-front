@@ -84,16 +84,9 @@ function Footer() {
                   Mapa Interactivo
                 </Link>
               </li>
-              <li>
-                <Link href="#" className="text-green-100 hover:text-white transition-colors duration-300 flex items-center gap-2 group">
-                  <span className="w-2 h-2 bg-green-400 rounded-full group-hover:scale-125 transition-transform"></span>
-                  Documentación
-                </Link>
-              </li>
             </ul>
           </div>
 
-          {/* Contacto */}
           <div>
             <h3 className="font-bold text-xl mb-6 text-green-200 flex items-center gap-2">
               <FaEnvelope className="text-green-300" />
@@ -102,65 +95,42 @@ function Footer() {
             <ul className="space-y-4">
               <li className="flex items-center gap-3 text-green-100">
                 <FaEnvelope className="text-green-300 flex-shrink-0" />
-                <a href="mailto:florcastteam@gmail.com" className="hover:text-white transition-colors">
+                <a target="_blank" href="mailto:florcastteam@gmail.com" className="hover:text-white transition-colors">
                   florcastteam@gmail.com
                 </a>
               </li>
             
               <li className="flex items-start gap-3 text-green-100">
                 <FaMapMarkerAlt className="text-green-300 flex-shrink-0 mt-1" />
-                <span>Distrito Nacional<br/>Santo Domingo<br/>Republica Dominicana</span>
+                <span>Distrito Nacional,<br/>República Dominicana</span>
               </li>
             </ul>
           </div>
-
-          {/* Redes sociales y newsletter */}
           <div>
             <h3 className="font-bold text-xl mb-6 text-green-200 flex items-center gap-2">
               <FaHeart className="text-pink-400" />
               Síguenos
             </h3>
             
-            {/* Redes sociales */}
             <div className="flex flex-wrap gap-4 mb-8">
               <a href="#" className="bg-green-700/50 hover:bg-green-600 p-3 rounded-full transition-all duration-300 hover:scale-110 group">
                 <SiInstagram size={20} className="text-pink-300 group-hover:text-pink-200" />
               </a>
             
              
-              <a href="#" className="bg-green-700/50 hover:bg-gray-800 p-3 rounded-full transition-all duration-300 hover:scale-110 group">
+              <a href="https://github.com/Aurora-Moorealis/florcast-front" className="bg-green-700/50 hover:bg-gray-800 p-3 rounded-full transition-all duration-300 hover:scale-110 group">
                 <SiGithub size={20} className="text-gray-300 group-hover:text-gray-200" />
               </a>
             </div>
-
-            {/* Newsletter */}
-            <div className="bg-green-800/30 p-4 rounded-lg border border-green-600/30">
-              <h4 className="font-semibold text-green-200 mb-3">📧 Newsletter</h4>
-              <p className="text-sm text-green-100 mb-3">
-                Recibe las últimas predicciones y consejos de jardinería
-              </p>
-              <div className="flex gap-2">
-                <input 
-                  type="email" 
-                  placeholder="tu@email.com"
-                  className="flex-1 px-3 py-2 bg-green-900/50 border border-green-600/50 rounded text-white placeholder-green-300 focus:outline-none focus:border-green-400 text-sm"
-                />
-                <button className="bg-green-600 hover:bg-green-500 px-4 py-2 rounded font-medium transition-colors text-sm">
-                  ✓
-                </button>
-              </div>
-            </div>
           </div>
         </div>
-
-        {/* Línea separadora */}
         <div className="border-t border-green-600/30 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             
             {/* Copyright */}
             <div className="text-center md:text-left">
               <p className="text-green-200 text-sm">
-                © 2025 FlorCast. Todos los derechos reservados.
+                © 2025 FLORCAST. Todos los derechos reservados.
               </p>
               <p className="text-green-300 text-xs mt-1">
                 Desarrollado con 💚 para un mundo más verde
@@ -175,8 +145,8 @@ function Footer() {
               <Link href="#" className="text-green-200 hover:text-white transition-colors">
                 Términos de Uso
               </Link>
-              <Link href="#" className="text-green-200 hover:text-white transition-colors">
-                Cookies
+              <Link href="https://github.com/Aurora-Moorealis/florcast-back" className="text-green-200 hover:text-white transition-colors">
+                API
               </Link>
             </div>
 

@@ -23,7 +23,7 @@ const Hero = forwardRef<HTMLElement, HeroProps>(({ className }, ref) => {
       />
       <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-black/30 via-black/50 to-black/70 flex-col">
         <h1 className="hero-title font-floral text-4xl md:text-6xl lg:text-8xl text-white text-center px-4 drop-shadow-2xl">
-          BLOOM WATCH:
+          BLOOMWATCH:
         </h1>
         <span className="hero-subtitle font-floral text-xl md:text-2xl lg:text-4xl text-white/90 text-center px-4 mt-4 drop-shadow-xl">
           Let&apos;s go to watch flowers!
