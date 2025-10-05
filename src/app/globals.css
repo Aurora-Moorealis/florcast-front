@@ -13,6 +13,9 @@ body {
 .font-floral {
   font-family: 'Suez One', cursive;
 }
+.font-second{
+  font-family: 'Inknut Antiqua', serif;
+}
 
 /* Animaciones personalizadas para GSAP */
 @keyframes spin-slow {

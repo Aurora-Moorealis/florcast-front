@@ -10,7 +10,6 @@ interface FlorcastMapProps {
 const FlorcastMap = forwardRef<HTMLElement, FlorcastMapProps>(({ className }, ref) => {
   return (
     <section ref={ref} className={`about-animate ${className || ''}`}>
-      {/* Header animado */}
       <div className="map-title flex items-center my-6 px-10 bg-gradient-to-r from-[#307b8e] to-[#4a9bb8] text-center py-8 rounded-lg mx-6 shadow-2xl relative overflow-hidden">
         <div className="map-element absolute inset-0 bg-gradient-to-r from-blue-400/20 to-teal-400/20 animate-pulse"></div>
         
@@ -35,7 +34,7 @@ const FlorcastMap = forwardRef<HTMLElement, FlorcastMapProps>(({ className }, re
       <div className="map-container flex items-center gap-x-20 my-6 px-20 py-16 relative">
         {/* Texto y descripción */}
         <div className="flex-1 relative z-10">
-          <h2 className="about-animate text-[#366b2b] text-4xl font-bold mb-6 relative">
+          <h2 className="about-animate font-second text-[#366b2b] text-4xl font-bold mb-6 relative">
             Who we are?
             <div className="decorative-element absolute -top-2 -right-6 w-8 h-8 bg-green-200 rounded-full opacity-60"></div>
           </h2>

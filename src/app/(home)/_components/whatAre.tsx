@@ -11,7 +11,7 @@ const WhatAre = forwardRef<HTMLDivElement, WhatAreProps>(({ className }, ref) =>
   return (
     <div ref={ref} className={`flex items-center gap-x-20 my-6 px-20 py-16 ${className || ''}`}>
       <div className="flex-1">
-        <h2 className="section-title text-[#366b2b] text-4xl font-bold mb-6">
+        <h2 className="section-title text-[#366b2b] text-4xl font-second font-bold mb-6">
           What we are?
         </h2>
         <p className="section-text text-black text-balance text-left mt-3 text-lg leading-relaxed">

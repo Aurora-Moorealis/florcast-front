@@ -27,7 +27,7 @@ const HowWork = forwardRef<HTMLElement, HowWorkProps>(({ className }, ref) => {
 
       <div className="flex items-center gap-x-20 my-6 px-20 py-16">
         <div className="flex-1">
-          <h2 className="work-title text-[#366b2b] text-4xl font-bold mb-6">
+          <h2 className="work-title font-second text-[#366b2b] text-4xl font-bold mb-6">
             How does it works?
           </h2>
           
