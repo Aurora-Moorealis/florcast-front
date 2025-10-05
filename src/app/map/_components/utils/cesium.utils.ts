@@ -1,8 +1,3 @@
-/**
- * Utilidades para CesiumJS
- * Funciones helper y configuraciones comunes
- */
-
 import type { CesiumViewerConstructorOptions, City } from '../types/cesium.types';
 import type { Flower } from '../types/flowers';
 
@@ -172,29 +167,28 @@ const getFlowerColor = (commonName: string, Cesium: any): any => {
  * Determinar rareza basada en familia, altura y características especiales
  */
 const determineFlowerRarity = (flower: Flower): string => {
-    const rareFamilies = ['Orchidaceae', 'Strelitziaceae', 'Theaceae'];
     const isHighMountain = flower.description.toLowerCase().includes('mountain') || 
                           flower.description.toLowerCase().includes('alpine') ||
-                          flower.location_name.toLowerCase().includes('everest') ||
-                          flower.location_name.toLowerCase().includes('swiss');
+                          flower.location.location_name.toLowerCase().includes('everest') ||
+                          flower.location.location_name.toLowerCase().includes('swiss');
     
-    // Legendaria: Orquídeas de montaña, flores extremadamente raras
-    if ((rareFamilies.includes(flower.family) && isHighMountain) || 
+    // Legendaria: flores de montaña, flores extremadamente raras
+    if (isHighMountain || 
         flower.description.toLowerCase().includes('rare') ||
-        flower.description.toLowerCase().includes('toxic')) {
+        flower.description.toLowerCase().includes('toxic') ||
+        flower.max_height >= 800) {
         return 'legendaria';
     }
     
-    // Exótica: Orquídeas, flores tropicales únicas, flores de familias raras
-    if (rareFamilies.includes(flower.family) || 
-        flower.description.toLowerCase().includes('tropical') ||
+    // Exótica: flores tropicales únicas, flores altas
+    if (flower.description.toLowerCase().includes('tropical') ||
         flower.description.toLowerCase().includes('exotic') ||
-        flower.height >= 300) {
+        flower.max_height >= 500) {
         return 'exótica';
     }
     
     // Rara: Flores medianas con características especiales
-    if (flower.height >= 100 || 
+    if (flower.max_height >= 100 || 
         flower.description.toLowerCase().includes('fragrance') ||
         flower.description.toLowerCase().includes('ornamental')) {
         return 'rara';
@@ -224,7 +218,6 @@ export const clearFlowerMarkers = (viewer: unknown): void => {
         entities.remove(entity);
     });
     
-    console.log(`🧹 Limpiadas ${flowersToRemove.length} flores del mapa`);
 };
 
 /**
@@ -260,11 +253,11 @@ export const addFlowerMarkers = (viewer: unknown, Cesium: unknown, flowers: Flow
             <div style="max-width: 300px;">
                 <h3 style="color: #4CAF50; margin: 0 0 10px 0;">${flower.common_name}</h3>
                 <p style="font-style: italic; color: #666; margin: 0 0 8px 0;">${flower.scientific_name}</p>
-                <p style="margin: 0 0 8px 0;"><strong>Familia:</strong> ${flower.family}</p>
-                <p style="margin: 0 0 8px 0;"><strong>Altura:</strong> ${flower.height} cm</p>
-                <p style="margin: 0 0 8px 0;"><strong>Temporada:</strong> ${Array.isArray(flower.bloom_season) ? flower.bloom_season.join(', ') : flower.bloom_season}</p>
+                <p style="margin: 0 0 8px 0;"><strong>Altura Máx:</strong> ${flower.max_height.toFixed(1)} cm</p>
+                <p style="margin: 0 0 8px 0;"><strong>Crecimiento:</strong> ${flower.growth_rate.toFixed(2)}/año</p>
+                <p style="margin: 0 0 8px 0;"><strong>Temporada:</strong> ${flower.bloom_season}</p>
                 <p style="margin: 0 0 8px 0;">${flower.description}</p>
-                <p style="margin: 0; color: #666; font-size: 0.9em;">${flower.location_name}</p>
+                <p style="margin: 0; color: #666; font-size: 0.9em;">${flower.location.location_name}</p>
             </div>
         `;
 
@@ -280,7 +273,7 @@ export const addFlowerMarkers = (viewer: unknown, Cesium: unknown, flowers: Flow
         try {
             (viewer as any).entities.add({
                 id: entityId,
-                position: (Cesium as any).Cartesian3.fromDegrees(flower.longitude, flower.latitude, 0), // Posición a nivel del suelo
+                position: (Cesium as any).Cartesian3.fromDegrees(flower.location.coords.longitude, flower.location.coords.latitude, 0), // Posición a nivel del suelo
                 name: flower.common_name,
             description: description,
             flower: flower, // Almacenar datos de la flor para referencia
@@ -647,14 +640,14 @@ export const centerGlobeOnFlowers = (viewer: unknown, Cesium: unknown, flowers: 
         }
 
         // Calcular el centro geográfico de las flores
-        const totalLat = flowers.reduce((sum: number, flower: any) => sum + flower.latitude, 0);
-        const totalLon = flowers.reduce((sum: number, flower: any) => sum + flower.longitude, 0);
+        const totalLat = flowers.reduce((sum: number, flower: any) => sum + flower.location.coords.latitude, 0);
+        const totalLon = flowers.reduce((sum: number, flower: any) => sum + flower.location.coords.longitude, 0);
         const centerLat = totalLat / flowers.length;
         const centerLon = totalLon / flowers.length;
 
         // Calcular la altura apropiada basada en la dispersión de las flores
-        const latitudes = flowers.map((f: any) => f.latitude);
-        const longitudes = flowers.map((f: any) => f.longitude);
+        const latitudes = flowers.map((f: any) => f.location.coords.latitude);
+        const longitudes = flowers.map((f: any) => f.location.coords.longitude);
         const latRange = Math.max(...latitudes) - Math.min(...latitudes);
         const lonRange = Math.max(...longitudes) - Math.min(...longitudes);
         const maxRange = Math.max(latRange, lonRange);
@@ -1251,8 +1244,8 @@ export const flyToFlower = (viewer: unknown, Cesium: unknown, flower: Flower): v
             // Si no se encuentra la entidad, navegar directamente a las coordenadas
             (viewer as any).camera.flyTo({
                 destination: (Cesium as any).Cartesian3.fromDegrees(
-                    flower.longitude, 
-                    flower.latitude, 
+                    flower.location.coords.longitude,
+                    flower.location.coords.latitude,
                     1500000 // Misma distancia que con entidad
                 ),
                 orientation: {
@@ -1270,8 +1263,8 @@ export const flyToFlower = (viewer: unknown, Cesium: unknown, flower: Flower): v
         // Fallback: navegar a las coordenadas básicas
         (viewer as any).camera.setView({
             destination: (Cesium as any).Cartesian3.fromDegrees(
-                flower.longitude, 
-                flower.latitude, 
+                flower.location.coords.longitude, 
+                flower.location.coords.latitude, 
                 100000
             )
         });

@@ -21,20 +21,7 @@ interface FlowerFilterPanelProps {
     isLoading?: boolean; 
 }
 
-const familyToCategoryMap: Record<string, string> = {
-    'Rosaceae': 'clásica',
-    'Asteraceae': 'silvestre',
-    'Orchidaceae': 'exótica',
-    'Solanaceae': 'híbrida',
-    'Malvaceae': 'tropical',
-    'Amaryllidaceae': 'antigua',
-    'Liliaceae': 'clásica',
-    'Lamiaceae': 'antigua',
-    'Theaceae': 'exótica',
-    'Strelitziaceae': 'exótica',
-    'Araceae': 'tropical',
-    'Fabaceae': 'silvestre'
-};
+// familyToCategoryMap removed as it's not used with the new data structure
 
 
 const flowerColorMap: Record<string, string> = {
@@ -59,26 +46,25 @@ const flowerColorMap: Record<string, string> = {
 };
 
 const determineRarity = (flower: Flower): string => {
-    const rareFamilies = ['Orchidaceae', 'Strelitziaceae', 'Theaceae'];
     const isHighMountain = flower.description.toLowerCase().includes('mountain') || 
                           flower.description.toLowerCase().includes('alpine') ||
-                          flower.location_name.toLowerCase().includes('everest') ||
-                          flower.location_name.toLowerCase().includes('swiss');
+                          flower.location.location_name.toLowerCase().includes('everest') ||
+                          flower.location.location_name.toLowerCase().includes('swiss');
 
-    if ((rareFamilies.includes(flower.family) && isHighMountain) || 
+    if (isHighMountain || 
         flower.description.toLowerCase().includes('rare') ||
-        flower.description.toLowerCase().includes('toxic')) {
+        flower.description.toLowerCase().includes('toxic') ||
+        flower.max_height >= 800) {
         return 'legendaria';
     }
     
-    if (rareFamilies.includes(flower.family) || 
-        flower.description.toLowerCase().includes('tropical') ||
+    if (flower.description.toLowerCase().includes('tropical') ||
         flower.description.toLowerCase().includes('exotic') ||
-        flower.height >= 300) {
+        flower.max_height >= 500) {
         return 'exótica';
     }
     
-    if (flower.height >= 100 || 
+    if (flower.max_height >= 100 || 
         flower.description.toLowerCase().includes('fragrance') ||
         flower.description.toLowerCase().includes('ornamental')) {
         return 'rara';
@@ -89,7 +75,7 @@ const determineRarity = (flower: Flower): string => {
 
 const convertFlowerData = (apiFlowers: Flower[]): FlowerUIData[] => {
     return apiFlowers.map(flower => {
-        const category = familyToCategoryMap[flower.family] || 'silvestre';
+        const category = 'silvestre'; // Simplified since family property doesn't exist in new structure
         const colorKey = Object.keys(flowerColorMap).find(key => 
             flower.common_name.toLowerCase().includes(key)
         );
@@ -114,7 +100,7 @@ export const FlowerFilterPanel: FC<FlowerFilterPanelProps> = ({
 }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('todos');
-    const [selectedRarity, setSelectedRarity] = useState('todos');
+    const [selectedRarity] = useState('todos');
     const [isExpanded, setIsExpanded] = useState(true);
 
     React.useEffect(() => {
@@ -134,15 +120,14 @@ export const FlowerFilterPanel: FC<FlowerFilterPanelProps> = ({
     const filteredFlowers = flowerDatabase.filter(flower => {
         const matchesSearch = flower.common_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             flower.scientific_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            flower.location_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            flower.family.toLowerCase().includes(searchTerm.toLowerCase());
+                            flower.location.location_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            flower.bloom_season.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = selectedCategory === 'todos' || flower.category === selectedCategory;
 
         return matchesSearch && matchesCategory;
     });
 
     const categories = ['todos', 'clásica', 'exótica', 'silvestre', 'híbrida', 'antigua', 'tropical', 'mágica'];
-    const rarities = ['todos', 'común', 'rara', 'exótica', 'legendaria'];
 
     return (
         <div className={`
@@ -253,7 +238,7 @@ export const FlowerFilterPanel: FC<FlowerFilterPanelProps> = ({
                                                 {flower.scientific_name}
                                             </p>
                                             <div className="flex items-center gap-2 mt-1">
-                                                <span className="text-xs text-gray-400 group-hover:text-gray-200 transition-colors">{flower.location_name}</span>
+                                                <span className="text-xs text-gray-400 group-hover:text-gray-200 transition-colors">{flower.location.location_name}</span>
                                             </div>
                                         </div>
                                     </div>

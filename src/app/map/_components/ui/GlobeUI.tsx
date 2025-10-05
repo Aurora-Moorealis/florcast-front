@@ -341,19 +341,10 @@ export const PanelRight: FC<PanelRightProps> = ({
 };
 
 // Componente de panel de información para flores enfocadas
+import { Flower } from '../types/flowers';
+
 interface FlowerInfoPanelProps {
-    flower?: {
-        id: number;
-        common_name: string;
-        scientific_name: string;
-        family: string;
-        description: string;
-        height: number;
-        bloom_season: string[] | string;
-        location_name: string;
-        rarity?: string;
-        category?: string;
-    } | null;
+    flower?: Flower | null;
     isVisible?: boolean;
     className?: string;
 }
@@ -367,24 +358,7 @@ export const FlowerInfoPanel: FC<FlowerInfoPanelProps> = ({
         return null;
     }
 
-    const getRarityColor = (rarity: string) => {
-        switch (rarity) {
-            case 'legendaria': return 'text-amber-300 bg-amber-500/20 border-amber-500/30';
-            case 'exótica': return 'text-purple-300 bg-purple-500/20 border-purple-500/30';
-            case 'rara': return 'text-blue-300 bg-blue-500/20 border-blue-500/30';
-            default: return 'text-green-300 bg-green-500/20 border-green-500/30';
-        }
-    };
-
-    const getCategoryColor = (category: string) => {
-        switch (category) {
-            case 'mágica': return 'text-purple-300 bg-purple-500/10';
-            case 'tropical': return 'text-orange-300 bg-orange-500/10';
-            case 'exótica': return 'text-pink-300 bg-pink-500/10';
-            case 'antigua': return 'text-yellow-300 bg-yellow-500/10';
-            default: return 'text-gray-300 bg-gray-500/10';
-        }
-    };
+    // No need for rarity/category color functions with new data structure
 
     return (
         <div className={`
@@ -404,36 +378,34 @@ export const FlowerInfoPanel: FC<FlowerInfoPanelProps> = ({
                 </p>
             </div>
 
-            {/* Badges de categoría y rareza */}
+            {/* Badges de información */}
             <div className="flex justify-center gap-3 mb-4">
-                {flower.rarity && (
-                    <span className={`
-                        px-3 py-1 rounded-full text-xs font-semibold border
-                        ${getRarityColor(flower.rarity)}
-                    `}>
-                        {flower.rarity.toUpperCase()}
-                    </span>
-                )}
-                {flower.category && (
-                    <span className={`
-                        px-3 py-1 rounded-full text-xs font-semibold
-                        ${getCategoryColor(flower.category)}
-                    `}>
-                        {flower.category}
-                    </span>
-                )}
+                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-500/20 border-green-500/30 text-green-300">
+                    BLOOM: {flower.bloom_season}
+                </span>
             </div>
 
             {/* Información detallada */}
             <div className="space-y-3 text-sm">
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <span className="text-gray-400">Familia:</span>
-                        <p className="text-white font-medium">{flower.family}</p>
+                        <span className="text-gray-400">Altura Máx:</span>
+                        <p className="text-white font-medium">{flower.max_height.toFixed(1)} cm</p>
                     </div>
                     <div>
-                        <span className="text-gray-400">Altura:</span>
-                        <p className="text-white font-medium">{flower.height} cm</p>
+                        <span className="text-gray-400">Crecimiento:</span>
+                        <p className="text-white font-medium">{flower.growth_rate.toFixed(2)}/año</p>
+                    </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <span className="text-gray-400">Altura Inicial:</span>
+                        <p className="text-white font-medium">{flower.initial_height.toFixed(1)} cm</p>
+                    </div>
+                    <div>
+                        <span className="text-gray-400">Temperatura:</span>
+                        <p className="text-white font-medium">{flower.temperature_to_grow.toFixed(1)}°C</p>
                     </div>
                 </div>
 
@@ -450,7 +422,17 @@ export const FlowerInfoPanel: FC<FlowerInfoPanelProps> = ({
                     <span className="text-gray-400">Ubicación:</span>
                     <p className="text-white font-medium flex items-center gap-1">
                         <span>📍</span>
-                        {flower.location_name}
+                        {flower.location.location_name}
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1">
+                        {flower.location.country_code} • {flower.location.coords.latitude.toFixed(4)}, {flower.location.coords.longitude.toFixed(4)}
+                    </p>
+                </div>
+                
+                <div>
+                    <span className="text-gray-400">Plantado:</span>
+                    <p className="text-white font-medium">
+                        {new Date(flower.planting_date).toLocaleDateString('es-ES')}
                     </p>
                 </div>
 

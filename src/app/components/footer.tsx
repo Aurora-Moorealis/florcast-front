@@ -139,8 +139,11 @@ function Footer() {
               <Link href="/terms" className="text-green-200 hover:text-white transition-colors">
                 Términos de Uso
               </Link>
-              <Link href="https://github.com/Aurora-Moorealis/florcast-back" className="text-green-200 hover:text-white transition-colors">
+              <Link href="https://api.florcast.earth/docs" className="text-green-200 hover:text-white transition-colors">
                 API
+              </Link>
+              <Link href="/sources" className="text-green-200 hover:text-white transition-colors">
+                Sources
               </Link>
             </div>
 
