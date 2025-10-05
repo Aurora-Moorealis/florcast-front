@@ -12,23 +12,34 @@ import { useState, useEffect, useRef } from 'react';
 // Types para Cesium se manejan como any debido a la complejidad de la librería
 import { 
     configureCesiumBase, 
+    checkBrowserCompatibility,
     handleCesiumError,
     getAdvancedViewerConfig,
     setInitialCameraView,
     configureSceneVisuals,
     setupAdvancedTerrain,
-    addCityMarkers,
+    addFlowerMarkers,
+    clearFlowerMarkers,
+    flyToFlower,
     setupInteractionEvents,
     configureAdvancedControls,
-    configurePerformanceOptimizations
+    configurePointOcclusion,
+    setupSmoothInteractionEvents,
+    configurePerformanceOptimizations,
+    updatePointVisibility
 } from '../utils/cesium.utils';
+import { mockFlowerData } from '../../../../data/flower';
 
 /**
  * Hook para Cesium Earth Pro Ultra con animaciones avanzadas
  * Configuración optimizada y experiencia cinematográfica
  */
-export const useCesiumAdvanced = () => {
+export const useCesiumAdvanced = (callbacks?: {
+    onFlowerHover?: (flower: any) => void;
+    onFlowerClick?: (flower: any) => void;
+}) => {
     const cesiumContainerRef = useRef<HTMLDivElement | null>(null);
+    const initializingRef = useRef<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [viewer, setViewer] = useState<any>(null);
@@ -36,26 +47,73 @@ export const useCesiumAdvanced = () => {
 
     useEffect(() => {
         let cesiumViewer: any = null;
+        
+        // Evitar múltiples inicializaciones simultáneas
+        if (initializingRef.current) {
+            console.log("⏳ Inicialización ya en progreso, saltando...");
+            return;
+        }
 
         const initializeCesium = async (): Promise<void> => {
             try {
-                console.log("🌍 Iniciando Earth Pro Ultra...");
+                // Marcar como en inicialización
+                initializingRef.current = true;
+                console.log("🌍 Iniciando Cesium...");
                 
-                const Cesium = await import("cesium") as typeof import("cesium");
-                configureCesiumBase();
-                
-                if (!cesiumContainerRef.current) {
-                    throw new Error("Contenedor no disponible");
+                // Verificar compatibilidad del navegador
+                const compatibility = checkBrowserCompatibility();
+                if (!compatibility.compatible) {
+                    const issues = compatibility.issues.join(', ');
+                    throw new Error(`Navegador incompatible: ${issues}. Usa Chrome 89+, Firefox 88+, Safari 14+ o Edge 89+`);
                 }
-
-                // Crear viewer con configuración premium
-                cesiumViewer = new Cesium.Viewer(
-                    cesiumContainerRef.current, 
-                    getAdvancedViewerConfig() as any
+                console.log("✅ Navegador compatible");
+                
+                // Verificar que el contenedor existe
+                if (!cesiumContainerRef.current) {
+                    throw new Error("Contenedor DOM no disponible para Cesium");
+                }
+                console.log("✅ Contenedor DOM disponible");
+                
+                // Configurar Cesium antes de la importación
+                configureCesiumBase();
+                console.log("✅ Cesium base configurado");
+                
+                // Importar Cesium con timeout
+                const importPromise = import("cesium") as Promise<typeof import("cesium")>;
+                const timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error("Timeout importando Cesium (30s)")), 30000)
                 );
                 
+                const Cesium = await Promise.race([importPromise, timeoutPromise]) as typeof import("cesium");
+                console.log("✅ Cesium importado exitosamente");
+                
+                // Verificar que Cesium se importó correctamente
+                if (!Cesium || !Cesium.Viewer) {
+                    throw new Error("Cesium no se cargó correctamente - Viewer no disponible");
+                }
+
+                console.log("🔧 Creando viewer Cesium...");
+                
+                // Obtener configuración del viewer
+                const viewerConfig = getAdvancedViewerConfig();
+                console.log("Configuración viewer:", viewerConfig);
+                
+                // Crear viewer con manejo de errores específico
+                try {
+                    cesiumViewer = new Cesium.Viewer(cesiumContainerRef.current, viewerConfig as any);
+                    console.log("✅ Viewer creado exitosamente");
+                } catch (viewerError) {
+                    console.error("❌ Error creando viewer:", viewerError);
+                    throw new Error(`Error creando Cesium Viewer: ${viewerError instanceof Error ? viewerError.message : String(viewerError)}`);
+                }
+                
+                // Verificar que el viewer se creó correctamente
+                if (!cesiumViewer || !cesiumViewer.scene) {
+                    throw new Error("Viewer creado pero scene no disponible");
+                }
+                
                 setViewer(cesiumViewer);
-                console.log("✅ Viewer Basic creado");
+                console.log("✅ Viewer configurado y guardado en estado");
 
                 // Configurar para bajo uso de memoria
                 const viewerScene = (cesiumViewer as any).scene;
@@ -77,30 +135,63 @@ export const useCesiumAdvanced = () => {
                 setupAdvancedAtmosphere(cesiumViewer, Cesium);
                 console.log("� Sistema ultra configurado");
 
-                // Agregar ciudades interactivas
-                await addCityMarkers(cesiumViewer, Cesium);
-                console.log("🏙️ Ciudades cargadas");
+                // Agregar marcadores de flores
+                addFlowerMarkers(cesiumViewer, Cesium, mockFlowerData);
+                console.log("� Flores cargadas");
 
-                // Configurar controles y eventos mejorados
-                setupInteractionEvents(cesiumViewer, Cesium);
+                // Configurar oclusión de puntos
+                configurePointOcclusion(cesiumViewer, Cesium);
+                
+                // Configurar controles suaves
                 configureAdvancedControls(cesiumViewer);
                 
-                const { setupCityHoverAnimations } = await import('../utils/cesium.utils');
-                setupCityHoverAnimations(cesiumViewer, Cesium);
-                console.log("🎮 Controles y animaciones listos");
+                // Configurar eventos de interacción suaves
+                setupSmoothInteractionEvents(
+                    cesiumViewer, 
+                    Cesium, 
+                    callbacks?.onFlowerHover, 
+                    callbacks?.onFlowerClick
+                );
+                console.log("🎮 Controles y eventos suaves configurados");
+
+                // Configurar actualización de visibilidad en movimiento de cámara
+                let visibilityUpdateTimeout: NodeJS.Timeout | null = null;
+                cesiumViewer.camera.moveEnd.addEventListener(() => {
+                    // Usar debounce para evitar muchas actualizaciones
+                    if (visibilityUpdateTimeout) {
+                        clearTimeout(visibilityUpdateTimeout);
+                    }
+                    visibilityUpdateTimeout = setTimeout(() => {
+                        updatePointVisibility(cesiumViewer, Cesium);
+                    }, 200);
+                });
+                
+                // Actualización inicial de visibilidad
+                setTimeout(() => {
+                    updatePointVisibility(cesiumViewer, Cesium);
+                }, 1000);
+                console.log("👁️ Sistema de visibilidad dinámico configurado");
 
                 // Configuración básica de iluminación
                 viewerScene.globe.enableLighting = true;
                 viewerScene.globe.atmosphereLightIntensity = 3.0;  // Reducido para ahorrar memoria
                 console.log("🎬 Iluminación básica aplicada");
 
-                // Agregar ciudades básicas
-                await addCityMarkers(cesiumViewer, Cesium);
-                console.log("🏙️ Ciudades cargadas");
+                // Agregar marcadores de flores
+                addFlowerMarkers(cesiumViewer, Cesium, mockFlowerData);
+                console.log("� Flores cargadas");
                 
-                // Configurar controles básicos
-                setupInteractionEvents(cesiumViewer, Cesium);
+                // Configurar oclusión y controles suaves
+                configurePointOcclusion(cesiumViewer, Cesium);
                 configureAdvancedControls(cesiumViewer);
+                
+                // Configurar eventos de interacción suaves
+                setupSmoothInteractionEvents(
+                    cesiumViewer, 
+                    Cesium, 
+                    callbacks?.onFlowerHover, 
+                    callbacks?.onFlowerClick
+                );
                 
                 // Configuración básica de cámara
                 setInitialCameraView((cesiumViewer as any).camera, Cesium, { 
@@ -112,6 +203,9 @@ export const useCesiumAdvanced = () => {
 
             } catch (err: unknown) {
                 handleCesiumError(err, setError, setIsLoading);
+            } finally {
+                // Limpiar bandera de inicialización
+                initializingRef.current = false;
             }
         };
 
@@ -142,11 +236,25 @@ export const useCesiumAdvanced = () => {
         };
     }, []);
 
+    // Función para actualizar flores sin reinicializar Cesium
+    const updateFlowers = async (newFlowers: any[]) => {
+        if (viewer && newFlowers) {
+            try {
+                const Cesium = await import("cesium");
+                addFlowerMarkers(viewer, Cesium, newFlowers);
+                console.log(`🔄 Flores actualizadas: ${newFlowers.length} elementos`);
+            } catch (error) {
+                console.error("Error actualizando flores:", error);
+            }
+        }
+    };
+
     return {
         cesiumContainerRef,
         isLoading,
         error,
         viewer,
+        updateFlowers,
         terrainLoaded
     };
 };

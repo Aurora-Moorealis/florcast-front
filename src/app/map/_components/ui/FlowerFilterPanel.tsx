@@ -3,84 +3,153 @@
 import React, { useState } from 'react';
 import type { FC } from 'react';
 import { Search, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Flower } from 'lucide-react';
+import { Flower as FlowerIcon } from 'lucide-react';
+import { Flower } from '../types/flowers';
+import { FlowerFilter, FlowerSearchParams } from '../types/interfaces';
+import { mockFlowerData } from '../../../../data/flower';
 
-// Tipos de datos
-interface FlowerType {
-    id: string;
-    name: string;
+// Interfaces adicionales para el UI
+interface FlowerUIData extends Flower {
     color: string;
     category: string;
-    region: string;
-    season: string;
     rarity: string;
 }
 
 interface FlowerFilterPanelProps {
     className?: string;
+    flowers?: Flower[]; // Datos de la API
+    onFlowerSelect?: (flower: FlowerUIData) => void; // Callback cuando se selecciona una flor
+    onFiltersChange?: (filters: FlowerFilter) => void; // Callback cuando cambian los filtros
+    isLoading?: boolean; // Estado de carga
 }
 
-export const FlowerFilterPanel: FC<FlowerFilterPanelProps> = ({ className }) => {
+// Mapeo de familias a categorías UI
+const familyToCategoryMap: Record<string, string> = {
+    'Rosaceae': 'clásica',
+    'Asteraceae': 'silvestre',
+    'Orchidaceae': 'exótica',
+    'Solanaceae': 'híbrida',
+    'Malvaceae': 'tropical',
+    'Amaryllidaceae': 'antigua',
+    'Liliaceae': 'clásica',
+    'Lamiaceae': 'antigua',
+    'Theaceae': 'exótica',
+    'Strelitziaceae': 'exótica',
+    'Araceae': 'tropical',
+    'Fabaceae': 'silvestre'
+};
+
+// Mapeo de nombres comunes a colores
+const flowerColorMap: Record<string, string> = {
+    'rosa': '#EC4899',
+    'rose': '#EC4899',
+    'roja': '#DC2626',
+    'red': '#DC2626',
+    'blanca': '#FFFFFF',
+    'white': '#FFFFFF',
+    'amarilla': '#EAB308',
+    'yellow': '#EAB308',
+    'azul': '#3B82F6',
+    'blue': '#3B82F6',
+    'violeta': '#8B5CF6',
+    'purple': '#8B5CF6',
+    'verde': '#10B981',
+    'green': '#10B981',
+    'naranja': '#F97316',
+    'orange': '#F97316',
+    'fucsia': '#FF1493',
+    'coral': '#F97316'
+};
+
+// Determinar rareza basada en familia, altura y características especiales
+const determineRarity = (flower: Flower): string => {
+    // Como la API envía growth_rate = 0, usamos otros criterios
+    const rareFamilies = ['Orchidaceae', 'Strelitziaceae', 'Theaceae'];
+    const commonFamilies = ['Asteraceae', 'Fabaceae'];
+    const isHighMountain = flower.description.toLowerCase().includes('mountain') || 
+                          flower.description.toLowerCase().includes('alpine') ||
+                          flower.location_name.toLowerCase().includes('everest') ||
+                          flower.location_name.toLowerCase().includes('swiss');
+    
+    // Legendaria: Orquídeas de montaña, flores extremadamente raras
+    if ((rareFamilies.includes(flower.family) && isHighMountain) || 
+        flower.description.toLowerCase().includes('rare') ||
+        flower.description.toLowerCase().includes('toxic')) {
+        return 'legendaria';
+    }
+    
+    // Exótica: Orquídeas, flores tropicales únicas, flores de familias raras
+    if (rareFamilies.includes(flower.family) || 
+        flower.description.toLowerCase().includes('tropical') ||
+        flower.description.toLowerCase().includes('exotic') ||
+        flower.height >= 300) {
+        return 'exótica';
+    }
+    
+    // Rara: Flores medianas con características especiales
+    if (flower.height >= 100 || 
+        flower.description.toLowerCase().includes('fragrance') ||
+        flower.description.toLowerCase().includes('ornamental')) {
+        return 'rara';
+    }
+    
+    // Común: Flores pequeñas y comunes
+    return 'común';
+};
+
+// Convertir datos de API a formato UI
+const convertFlowerData = (apiFlowers: Flower[]): FlowerUIData[] => {
+    return apiFlowers.map(flower => {
+        const category = familyToCategoryMap[flower.family] || 'silvestre';
+        const colorKey = Object.keys(flowerColorMap).find(key => 
+            flower.common_name.toLowerCase().includes(key)
+        );
+        const color = colorKey ? flowerColorMap[colorKey] : '#10B981';
+        const rarity = determineRarity(flower);
+
+        return {
+            ...flower,
+            category,
+            color,
+            rarity
+        };
+    });
+};
+
+export const FlowerFilterPanel: FC<FlowerFilterPanelProps> = ({ 
+    className, 
+    flowers = [], 
+    onFlowerSelect,
+    onFiltersChange,
+    isLoading = false 
+}) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('todos');
     const [selectedRarity, setSelectedRarity] = useState('todos');
     const [isExpanded, setIsExpanded] = useState(true);
 
-    // Base de datos extensa de rosas
-    const flowerDatabase: FlowerType[] = [
-        // Rosas Clásicas
-        { id: '1', name: 'Rosa Roja Clásica', color: '#DC2626', category: 'clásica', region: 'Europa', season: 'primavera', rarity: 'común' },
-        { id: '2', name: 'Rosa Blanca Pureza', color: '#FFFFFF', category: 'clásica', region: 'Asia', season: 'verano', rarity: 'común' },
-        { id: '3', name: 'Rosa Rosa Pasión', color: '#EC4899', category: 'clásica', region: 'América', season: 'primavera', rarity: 'común' },
-        { id: '4', name: 'Rosa Amarilla Sol', color: '#EAB308', category: 'clásica', region: 'África', season: 'verano', rarity: 'común' },
-        
-        // Rosas Exóticas
-        { id: '5', name: 'Rosa Azul Celestial', color: '#3B82F6', category: 'exótica', region: 'Asia', season: 'invierno', rarity: 'rara' },
-        { id: '6', name: 'Rosa Violeta Místico', color: '#8B5CF6', category: 'exótica', region: 'Europa', season: 'otoño', rarity: 'exótica' },
-        { id: '7', name: 'Rosa Verde Esmeralda', color: '#10B981', category: 'exótica', region: 'América', season: 'primavera', rarity: 'exótica' },
-        { id: '8', name: 'Rosa Negra Elegante', color: '#1F2937', category: 'exótica', region: 'África', season: 'invierno', rarity: 'legendaria' },
-        
-        // Rosas Silvestres
-        { id: '9', name: 'Rosa Salvaje Coral', color: '#F97316', category: 'silvestre', region: 'América', season: 'primavera', rarity: 'común' },
-        { id: '10', name: 'Rosa Montaña Lavanda', color: '#A855F7', category: 'silvestre', region: 'Europa', season: 'verano', rarity: 'rara' },
-        { id: '11', name: 'Rosa Pradera Dorada', color: '#D97706', category: 'silvestre', region: 'Asia', season: 'otoño', rarity: 'común' },
-        { id: '12', name: 'Rosa Desierto Carmesí', color: '#B91C1C', category: 'silvestre', region: 'África', season: 'invierno', rarity: 'rara' },
-        
-        // Rosas Híbridas
-        { id: '13', name: 'Rosa Arcoíris Multicolor', color: '#6366F1', category: 'híbrida', region: 'Laboratorio', season: 'todo el año', rarity: 'legendaria' },
-        { id: '14', name: 'Rosa Cristal Transparente', color: '#E5E7EB', category: 'híbrida', region: 'Laboratorio', season: 'todo el año', rarity: 'exótica' },
-        { id: '15', name: 'Rosa Fuego Ardiente', color: '#EF4444', category: 'híbrida', region: 'Laboratorio', season: 'verano', rarity: 'exótica' },
-        { id: '16', name: 'Rosa Hielo Gélida', color: '#06B6D4', category: 'híbrida', region: 'Laboratorio', season: 'invierno', rarity: 'rara' },
-        
-        // Rosas Antiguas
-        { id: '17', name: 'Rosa Damascena Histórica', color: '#BE185D', category: 'antigua', region: 'Medio Oriente', season: 'primavera', rarity: 'rara' },
-        { id: '18', name: 'Rosa Gallica Francesa', color: '#7C2D12', category: 'antigua', region: 'Europa', season: 'verano', rarity: 'exótica' },
-        { id: '19', name: 'Rosa Alba Real', color: '#F3F4F6', category: 'antigua', region: 'Europa', season: 'primavera', rarity: 'legendaria' },
-        { id: '20', name: 'Rosa Centifolia Reina', color: '#DB2777', category: 'antigua', region: 'Europa', season: 'verano', rarity: 'exótica' },
-        
-        // Rosas Nuevas - Expandiendo la colección
-        { id: '21', name: 'Rosa Perla Nacarada', color: '#F8FAFC', category: 'híbrida', region: 'Laboratorio', season: 'todo el año', rarity: 'legendaria' },
-        { id: '22', name: 'Rosa Cobre Brillante', color: '#CD7F32', category: 'antigua', region: 'Medio Oriente', season: 'otoño', rarity: 'exótica' },
-        { id: '23', name: 'Rosa Jade Imperial', color: '#00A86B', category: 'exótica', region: 'Asia', season: 'primavera', rarity: 'legendaria' },
-        { id: '24', name: 'Rosa Ámbar Dorado', color: '#FFBF00', category: 'silvestre', region: 'América', season: 'verano', rarity: 'rara' },
-        
-        // Rosas Tropicales
-        { id: '25', name: 'Rosa Mango Tropical', color: '#FF8C00', category: 'tropical', region: 'Caribe', season: 'verano', rarity: 'común' },
-        { id: '26', name: 'Rosa Coco Blanco', color: '#F5F5DC', category: 'tropical', region: 'Pacífico', season: 'todo el año', rarity: 'rara' },
-        { id: '27', name: 'Rosa Hibisco Fucsia', color: '#FF1493', category: 'tropical', region: 'Hawái', season: 'primavera', rarity: 'común' },
-        { id: '28', name: 'Rosa Plátano Amarillo', color: '#FFE135', category: 'tropical', region: 'América Central', season: 'verano', rarity: 'común' },
-        
-        // Rosas Mágicas
-        { id: '29', name: 'Rosa Estrella Plateada', color: '#C0C0C0', category: 'mágica', region: 'Reino Místico', season: 'luna llena', rarity: 'legendaria' },
-        { id: '30', name: 'Rosa Aurora Boreal', color: '#00FFFF', category: 'mágica', region: 'Ártico', season: 'invierno', rarity: 'legendaria' },
-        { id: '31', name: 'Rosa Eclipse Solar', color: '#FFD700', category: 'mágica', region: 'Observatorio', season: 'eclipse', rarity: 'exótica' },
-        { id: '32', name: 'Rosa Galaxia Violeta', color: '#9932CC', category: 'mágica', region: 'Espacio', season: 'eterna', rarity: 'legendaria' }
-    ];
+    // Notificar cambios en los filtros
+    React.useEffect(() => {
+        if (onFiltersChange) {
+            const filters: FlowerFilter = {
+                category: selectedCategory !== 'todos' ? selectedCategory : undefined,
+                rarity: selectedRarity !== 'todos' ? selectedRarity : undefined,
+            };
+            onFiltersChange(filters);
+        }
+    }, [selectedCategory, selectedRarity, onFiltersChange]);
+
+    // Convertir datos de API a formato UI o usar datos mock del archivo flower.ts
+    const flowerDatabase: FlowerUIData[] = flowers.length > 0 
+        ? convertFlowerData(flowers)
+        : convertFlowerData(mockFlowerData);
 
     // Filtrar flores según criterios
     const filteredFlowers = flowerDatabase.filter(flower => {
-        const matchesSearch = flower.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            flower.region.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesSearch = flower.common_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            flower.scientific_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            flower.location_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            flower.family.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = selectedCategory === 'todos' || flower.category === selectedCategory;
         const matchesRarity = selectedRarity === 'todos' || flower.rarity === selectedRarity;
         
@@ -176,23 +245,44 @@ export const FlowerFilterPanel: FC<FlowerFilterPanelProps> = ({ className }) => 
                         </div>
                         
                         <div className="space-y-2">
-                            {filteredFlowers.map((flower, index) => (
-                                <div
-                                    key={flower.id}
-                                    className="p-3 bg-white/5 rounded-md border border-white/10 hover:bg-white/10 hover:border-pink-400/30 transition-all duration-200 cursor-pointer group animate-fade-in"
-                                    style={{ animationDelay: `${index * 0.05}s` }}
-                                >
+                            {isLoading ? (
+                                // Skeleton loading
+                                Array.from({ length: 3 }).map((_, index) => (
+                                    <div
+                                        key={`skeleton-${index}`}
+                                        className="p-3 bg-white/5 rounded-md border border-white/10 animate-pulse"
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-5 h-5 bg-gray-600 rounded-full"></div>
+                                            <div className="flex-1">
+                                                <div className="h-4 bg-gray-600 rounded w-3/4 mb-2"></div>
+                                                <div className="h-3 bg-gray-700 rounded w-1/2"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                filteredFlowers.map((flower, index) => (
+                                    <div
+                                        key={flower.id}
+                                        className="p-3 bg-white/5 rounded-md border border-white/10 hover:bg-white/10 hover:border-pink-400/30 transition-all duration-200 cursor-pointer group animate-fade-in"
+                                        style={{ animationDelay: `${index * 0.05}s` }}
+                                        onClick={() => onFlowerSelect?.(flower)}
+                                    >
                                     <div className="flex items-center gap-3">
                                         <div className="relative">
-                                            <Flower 
+                                            <FlowerIcon 
                                                 className="w-5 h-5 transition-transform group-hover:scale-110 group-hover:animate-flower-glow"
                                                 style={{ color: flower.color }}
                                             />
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <h4 className="text-sm font-medium text-white truncate">
-                                                {flower.name}
+                                                {flower.common_name}
                                             </h4>
+                                            <p className="text-xs text-gray-400 italic truncate">
+                                                {flower.scientific_name}
+                                            </p>
                                             <div className="flex items-center gap-2 mt-1">
                                                 <span className={`
                                                     px-2 py-0.5 rounded-full text-xs font-medium transition-all
@@ -204,7 +294,7 @@ export const FlowerFilterPanel: FC<FlowerFilterPanelProps> = ({ className }) => 
                                                 `}>
                                                     {flower.rarity}
                                                 </span>
-                                                <span className="text-xs text-gray-400 group-hover:text-gray-200 transition-colors">{flower.region}</span>
+                                                <span className="text-xs text-gray-400 group-hover:text-gray-200 transition-colors">{flower.location_name}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -220,15 +310,16 @@ export const FlowerFilterPanel: FC<FlowerFilterPanelProps> = ({ className }) => 
                                             {flower.category}
                                         </span>
                                         <span>•</span>
-                                        <span>{flower.season}</span>
+                                        <span>{Array.isArray(flower.bloom_season) ? flower.bloom_season.join(', ') : flower.bloom_season}</span>
                                     </div>
                                 </div>
-                            ))}
+                            ))
+                            )}
                         </div>
 
-                        {filteredFlowers.length === 0 && (
+                        {!isLoading && filteredFlowers.length === 0 && (
                             <div className="text-center py-8 text-gray-400">
-                                <Flower className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                                <FlowerIcon className="w-8 h-8 mx-auto mb-2 opacity-50" />
                                 <p className="text-sm">No se encontraron flores</p>
                                 <p className="text-xs mt-1">Ajusta tus filtros de búsqueda</p>
                             </div>
