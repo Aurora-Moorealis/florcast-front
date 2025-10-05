@@ -102,17 +102,14 @@ function Footer() {
             <ul className="space-y-4">
               <li className="flex items-center gap-3 text-green-100">
                 <FaEnvelope className="text-green-300 flex-shrink-0" />
-                <a href="mailto:info@florcast.com" className="hover:text-white transition-colors">
-                  info@florcast.com
+                <a href="mailto:florcastteam@gmail.com" className="hover:text-white transition-colors">
+                  florcastteam@gmail.com
                 </a>
               </li>
-              <li className="flex items-center gap-3 text-green-100">
-                <FaPhone className="text-green-300 flex-shrink-0" />
-                <span>+1 (555) 123-4567</span>
-              </li>
+            
               <li className="flex items-start gap-3 text-green-100">
                 <FaMapMarkerAlt className="text-green-300 flex-shrink-0 mt-1" />
-                <span>123 Green Valley Ave<br/>Suite 456<br/>EcoCity, EC 12345</span>
+                <span>Distrito Nacional<br/>Santo Domingo<br/>Republica Dominicana</span>
               </li>
             </ul>
           </div>
@@ -129,18 +126,8 @@ function Footer() {
               <a href="#" className="bg-green-700/50 hover:bg-green-600 p-3 rounded-full transition-all duration-300 hover:scale-110 group">
                 <SiInstagram size={20} className="text-pink-300 group-hover:text-pink-200" />
               </a>
-              <a href="#" className="bg-green-700/50 hover:bg-red-600 p-3 rounded-full transition-all duration-300 hover:scale-110 group">
-                <FaYoutube size={20} className="text-red-300 group-hover:text-red-200" />
-              </a>
-              <a href="#" className="bg-green-700/50 hover:bg-gray-800 p-3 rounded-full transition-all duration-300 hover:scale-110 group">
-                <SiX size={20} className="text-gray-300 group-hover:text-white" />
-              </a>
-              <a href="#" className="bg-green-700/50 hover:bg-blue-700 p-3 rounded-full transition-all duration-300 hover:scale-110 group">
-                <SiFacebook size={20} className="text-blue-300 group-hover:text-blue-200" />
-              </a>
-              <a href="#" className="bg-green-700/50 hover:bg-blue-800 p-3 rounded-full transition-all duration-300 hover:scale-110 group">
-                <SiLinkedin size={20} className="text-blue-300 group-hover:text-blue-200" />
-              </a>
+            
+             
               <a href="#" className="bg-green-700/50 hover:bg-gray-800 p-3 rounded-full transition-all duration-300 hover:scale-110 group">
                 <SiGithub size={20} className="text-gray-300 group-hover:text-gray-200" />
               </a>
