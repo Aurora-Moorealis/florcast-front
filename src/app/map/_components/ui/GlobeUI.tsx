@@ -278,13 +278,6 @@ export const ViewControlButton: FC<ViewControlButtonProps> = ({
                 <div className="text-xs opacity-80">{viewInfo.description}</div>
             </div>
         </button>
-        
-        <div className="mt-3 pt-3 border-t border-gray-600/30">
-            <div className="flex items-center justify-between text-xs">
-                <span className="text-blue-300">TypeScript</span>
-                <span className="text-green-400">✅</span>
-            </div>
-        </div>
     </div>
 );
 interface PanelRightProps {
@@ -389,28 +382,28 @@ export const FlowerInfoPanel: FC<FlowerInfoPanelProps> = ({
             <div className="space-y-3 text-sm">
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <span className="text-gray-400">Altura Máx:</span>
+                        <span className="text-gray-400">Max Height:</span>
                         <p className="text-white font-medium">{flower.max_height.toFixed(1)} cm</p>
                     </div>
                     <div>
-                        <span className="text-gray-400">Crecimiento:</span>
-                        <p className="text-white font-medium">{flower.growth_rate.toFixed(2)}/año</p>
+                        <span className="text-gray-400">Growth:</span>
+                        <p className="text-white font-medium">{flower.growth_rate.toFixed(2)} cm/día</p>
                     </div>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <span className="text-gray-400">Altura Inicial:</span>
+                        <span className="text-gray-400">Initial Height:</span>
                         <p className="text-white font-medium">{flower.initial_height.toFixed(1)} cm</p>
                     </div>
                     <div>
-                        <span className="text-gray-400">Temperatura:</span>
+                        <span className="text-gray-400">Grow Day Degree:</span>
                         <p className="text-white font-medium">{flower.temperature_to_grow.toFixed(1)}°C</p>
                     </div>
                 </div>
 
                 <div>
-                    <span className="text-gray-400">Temporada:</span>
+                    <span className="text-gray-400">Season:</span>
                     <p className="text-white font-medium">
                         {Array.isArray(flower.bloom_season) 
                             ? flower.bloom_season.join(', ') 
@@ -419,7 +412,7 @@ export const FlowerInfoPanel: FC<FlowerInfoPanelProps> = ({
                 </div>
 
                 <div>
-                    <span className="text-gray-400">Ubicación:</span>
+                    <span className="text-gray-400">Location:</span>
                     <p className="text-white font-medium flex items-center gap-1">
                         <span>📍</span>
                         {flower.location.location_name}
@@ -430,7 +423,7 @@ export const FlowerInfoPanel: FC<FlowerInfoPanelProps> = ({
                 </div>
                 
                 <div>
-                    <span className="text-gray-400">Plantado:</span>
+                    <span className="text-gray-400">Planted:</span>
                     <p className="text-white font-medium">
                         {new Date(flower.planting_date).toLocaleDateString('es-ES')}
                     </p>
@@ -446,7 +439,7 @@ export const FlowerInfoPanel: FC<FlowerInfoPanelProps> = ({
             {/* Indicador de cierre */}
             <div className="text-center mt-4 pt-3 border-t border-white/20">
                 <p className="text-xs text-gray-400">
-                    Haz clic en otra área para cerrar
+                    Click on another area to close
                 </p>
             </div>
         </div>

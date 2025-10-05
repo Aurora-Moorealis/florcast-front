@@ -99,15 +99,15 @@ export const FlowerFilterPanel: FC<FlowerFilterPanelProps> = ({
     isLoading = false 
 }) => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('todos');
-    const [selectedRarity] = useState('todos');
+    const [selectedCategory, setSelectedCategory] = useState('all');
+    const [selectedRarity] = useState('all');
     const [isExpanded, setIsExpanded] = useState(true);
 
     React.useEffect(() => {
         if (onFiltersChange) {
             const filters: FlowerFilter = {
-                category: selectedCategory !== 'todos' ? selectedCategory : undefined,
-                rarity: selectedRarity !== 'todos' ? selectedRarity : undefined,
+                category: selectedCategory !== 'all' ? selectedCategory : undefined,
+                rarity: selectedRarity !== 'all' ? selectedRarity : undefined,
             };
             onFiltersChange(filters);
         }
@@ -122,12 +122,12 @@ export const FlowerFilterPanel: FC<FlowerFilterPanelProps> = ({
                             flower.scientific_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             flower.location.location_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             flower.bloom_season.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = selectedCategory === 'todos' || flower.category === selectedCategory;
+        const matchesCategory = selectedCategory === 'all' || flower.category === selectedCategory;
 
         return matchesSearch && matchesCategory;
     });
 
-    const categories = ['todos', 'clásica', 'exótica', 'silvestre', 'híbrida', 'antigua', 'tropical', 'mágica'];
+    const categories = ['all', 'clásica', 'exótica', 'silvestre', 'híbrida', 'antigua', 'tropical', 'mágica'];
 
     return (
         <div className={`
@@ -142,7 +142,7 @@ export const FlowerFilterPanel: FC<FlowerFilterPanelProps> = ({
                 {isExpanded && (
                     <div className="flex items-center gap-2">
                         <Filter className="w-4 h-4 text-pink-400" />
-                        <h2 className="text-sm font-semibold text-white">Filtros de Flores</h2>
+                        <h2 className="text-sm font-semibold text-white">Flower Filters</h2>
                     </div>
                 )}
                 <button
@@ -166,7 +166,7 @@ export const FlowerFilterPanel: FC<FlowerFilterPanelProps> = ({
                             <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
                             <input
                                 type="text"
-                                placeholder="Buscar flores..."
+                                placeholder="Search flower..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="w-full pl-9 pr-3 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 text-sm focus:outline-none focus:border-pink-400/50 focus:bg-white/10 transition-all"
@@ -176,7 +176,7 @@ export const FlowerFilterPanel: FC<FlowerFilterPanelProps> = ({
 
                     {/* Filtros de categoría */}
                     <div className="p-3 border-b border-white/10">
-                        <h3 className="text-xs font-semibold text-gray-300 mb-2 uppercase tracking-wide">Categorías</h3>
+                        <h3 className="text-xs font-semibold text-gray-300 mb-2 uppercase tracking-wide">Categories</h3>
                         <select
                             value={selectedCategory}
                             onChange={(e) => setSelectedCategory(e.target.value)}
@@ -194,7 +194,7 @@ export const FlowerFilterPanel: FC<FlowerFilterPanelProps> = ({
                     <div className="flex-1 overflow-y-auto p-3 custom-scrollbar">
                         <div className="flex items-center justify-between mb-3">
                             <h3 className="text-xs font-semibold text-gray-300 uppercase tracking-wide">
-                                Resultados ({filteredFlowers.length})
+                                Results ({filteredFlowers.length})
                             </h3>
                         </div>
                         
@@ -264,8 +264,8 @@ export const FlowerFilterPanel: FC<FlowerFilterPanelProps> = ({
                         {!isLoading && filteredFlowers.length === 0 && (
                             <div className="text-center py-8 text-gray-400">
                                 <FlowerIcon className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                                <p className="text-sm">No se encontraron flores</p>
-                                <p className="text-xs mt-1">Ajusta tus filtros de búsqueda</p>
+                                <p className="text-sm">No flowers found</p>
+                                <p className="text-xs mt-1">Adjust your search filters</p>
                             </div>
                         )}
                     </div>
@@ -274,7 +274,7 @@ export const FlowerFilterPanel: FC<FlowerFilterPanelProps> = ({
                     <div className="p-3 border-t border-white/10 bg-black/30">
                         <div className="text-center">
                             <p className="text-xs text-gray-400">
-                                {flowerDatabase.length} flores en la base de datos
+                                {flowerDatabase.length} flowers in database
                             </p>
                         </div>
                     </div>
