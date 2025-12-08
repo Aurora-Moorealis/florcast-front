@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Header from "../components/header";
 import Hero from "./_components/hero";
 import Footer from "../components/footer";

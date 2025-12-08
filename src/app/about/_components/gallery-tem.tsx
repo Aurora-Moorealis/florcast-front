@@ -4,6 +4,7 @@
 import { FC, forwardRef } from 'react';
 import { TeamMember, teamMembers } from './infoTeam';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface GalleryItemProps {
     member: TeamMember;
@@ -19,9 +20,11 @@ const GalleryItem: FC<GalleryItemProps> = ({ member, index }) => {
         <div className="team-member flex flex-col items-center text-center space-y-4 p-4 relative">
             <Link target='_blank' href={`mailto:${member.gmail}`}>
             <div className="team-image w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden cursor-pointer shadow-lg relative">
-                <img 
+                <Image 
                     src={member.imageUrl} 
                     alt={member.name}
+                    width={160}
+                    height={160}
                     className="w-full h-full object-cover transition-transform duration-300"
                     />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
@@ -76,5 +79,7 @@ const TeamGallery = forwardRef<HTMLElement, TeamGalleryProps>(({ className }, re
         </section>
     );
 });
+
+TeamGallery.displayName = 'TeamGallery';
 
 export default TeamGallery;

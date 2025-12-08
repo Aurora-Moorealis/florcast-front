@@ -1,12 +1,7 @@
-/**
- * Componentes UI para los globos de Cesium
- * Interfaces de usuario reutilizables
- */
 
 import { FC } from 'react';
-import { Rose } from 'lucide-react'
+import { Rose, Plus } from 'lucide-react'
 
-// Componente de carga
 interface LoadingOverlayProps {
     title: string;
     subtitle: string;
@@ -40,13 +35,10 @@ export const LoadingOverlay: FC<LoadingOverlayProps> = ({
     );
 };
 
-// Componente de error
 interface ErrorDisplayProps {
     error: string;
     title?: string;
 }
-
-// Componente de controles de efectos especiales
 interface SpecialEffectsControlsProps {
     className?: string;
 }
@@ -82,7 +74,7 @@ export const SpecialEffectsControls: FC<SpecialEffectsControlsProps> = ({ classN
                 {/* Estado del tiempo fijo */}
                 <div className="flex items-center gap-3 text-sm text-green-300 bg-green-900/20 rounded p-2 border border-green-700/50">
                     <span className="w-6 h-6 bg-green-800 rounded flex items-center justify-center text-xs font-bold text-yellow-300 border border-green-600">
-                        ☀
+                        ☀JJJJJJJJ
                     </span>
                     <span className="text-lg">{timeStatus.icon}</span>
                     <span className="flex-1">{timeStatus.name}</span>
@@ -286,13 +278,6 @@ export const ViewControlButton: FC<ViewControlButtonProps> = ({
                 <div className="text-xs opacity-80">{viewInfo.description}</div>
             </div>
         </button>
-        
-        <div className="mt-3 pt-3 border-t border-gray-600/30">
-            <div className="flex items-center justify-between text-xs">
-                <span className="text-blue-300">TypeScript</span>
-                <span className="text-green-400">✅</span>
-            </div>
-        </div>
     </div>
 );
 interface PanelRightProps {
@@ -304,20 +289,9 @@ interface PanelRightProps {
 
 export const PanelRight: FC<PanelRightProps> = ({ 
     title = 'Flores',
-    color = 'red',
     icon = '🌹',
     children
 }) => {
-    const colorClasses = {
-        blue: 'from-blue-900/80 to-blue-800/80 border-blue-500/30 text-blue-300',
-        green: 'from-green-900/80 to-green-800/80 border-green-500/30 text-green-300',
-        purple: 'from-purple-900/80 to-purple-800/80 border-purple-500/30 text-purple-300',
-        red: 'from-red-900/80 to-red-800/80 border-red-500/30 text-red-300'
-    };
-
-    const colors = colorClasses[color];
-
-    // Array de ejemplo de flores con diferentes colores
     const flowerItems = [
         { color: '#ff6b6b', name: 'Rosa Roja' },
         { color: '#4ecdc4', name: 'Rosa Azul' },
@@ -360,19 +334,10 @@ export const PanelRight: FC<PanelRightProps> = ({
 };
 
 // Componente de panel de información para flores enfocadas
+import { Flower } from '../types/flowers';
+
 interface FlowerInfoPanelProps {
-    flower?: {
-        id: number;
-        common_name: string;
-        scientific_name: string;
-        family: string;
-        description: string;
-        height: number;
-        bloom_season: string[] | string;
-        location_name: string;
-        rarity?: string;
-        category?: string;
-    } | null;
+    flower?: Flower | null;
     isVisible?: boolean;
     className?: string;
 }
@@ -386,24 +351,7 @@ export const FlowerInfoPanel: FC<FlowerInfoPanelProps> = ({
         return null;
     }
 
-    const getRarityColor = (rarity: string) => {
-        switch (rarity) {
-            case 'legendaria': return 'text-amber-300 bg-amber-500/20 border-amber-500/30';
-            case 'exótica': return 'text-purple-300 bg-purple-500/20 border-purple-500/30';
-            case 'rara': return 'text-blue-300 bg-blue-500/20 border-blue-500/30';
-            default: return 'text-green-300 bg-green-500/20 border-green-500/30';
-        }
-    };
-
-    const getCategoryColor = (category: string) => {
-        switch (category) {
-            case 'mágica': return 'text-purple-300 bg-purple-500/10';
-            case 'tropical': return 'text-orange-300 bg-orange-500/10';
-            case 'exótica': return 'text-pink-300 bg-pink-500/10';
-            case 'antigua': return 'text-yellow-300 bg-yellow-500/10';
-            default: return 'text-gray-300 bg-gray-500/10';
-        }
-    };
+    // No need for rarity/category color functions with new data structure
 
     return (
         <div className={`
@@ -423,41 +371,39 @@ export const FlowerInfoPanel: FC<FlowerInfoPanelProps> = ({
                 </p>
             </div>
 
-            {/* Badges de categoría y rareza */}
+            {/* Badges de información */}
             <div className="flex justify-center gap-3 mb-4">
-                {flower.rarity && (
-                    <span className={`
-                        px-3 py-1 rounded-full text-xs font-semibold border
-                        ${getRarityColor(flower.rarity)}
-                    `}>
-                        {flower.rarity.toUpperCase()}
-                    </span>
-                )}
-                {flower.category && (
-                    <span className={`
-                        px-3 py-1 rounded-full text-xs font-semibold
-                        ${getCategoryColor(flower.category)}
-                    `}>
-                        {flower.category}
-                    </span>
-                )}
+                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-500/20 border-green-500/30 text-green-300">
+                    BLOOM: {flower.bloom_season}
+                </span>
             </div>
 
             {/* Información detallada */}
             <div className="space-y-3 text-sm">
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <span className="text-gray-400">Familia:</span>
-                        <p className="text-white font-medium">{flower.family}</p>
+                        <span className="text-gray-400">Max Height:</span>
+                        <p className="text-white font-medium">{flower.max_height.toFixed(1)} cm</p>
                     </div>
                     <div>
-                        <span className="text-gray-400">Altura:</span>
-                        <p className="text-white font-medium">{flower.height} cm</p>
+                        <span className="text-gray-400">Growth:</span>
+                        <p className="text-white font-medium">{flower.growth_rate.toFixed(2)} cm/día</p>
+                    </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <span className="text-gray-400">Initial Height:</span>
+                        <p className="text-white font-medium">{flower.initial_height.toFixed(1)} cm</p>
+                    </div>
+                    <div>
+                        <span className="text-gray-400">Grow Day Degree:</span>
+                        <p className="text-white font-medium">{flower.temperature_to_grow.toFixed(1)}°C</p>
                     </div>
                 </div>
 
                 <div>
-                    <span className="text-gray-400">Temporada:</span>
+                    <span className="text-gray-400">Season:</span>
                     <p className="text-white font-medium">
                         {Array.isArray(flower.bloom_season) 
                             ? flower.bloom_season.join(', ') 
@@ -466,10 +412,20 @@ export const FlowerInfoPanel: FC<FlowerInfoPanelProps> = ({
                 </div>
 
                 <div>
-                    <span className="text-gray-400">Ubicación:</span>
+                    <span className="text-gray-400">Location:</span>
                     <p className="text-white font-medium flex items-center gap-1">
                         <span>📍</span>
-                        {flower.location_name}
+                        {flower.location.location_name}
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1">
+                        {flower.location.country_code} • {flower.location.coords.latitude.toFixed(4)}, {flower.location.coords.longitude.toFixed(4)}
+                    </p>
+                </div>
+                
+                <div>
+                    <span className="text-gray-400">Planted:</span>
+                    <p className="text-white font-medium">
+                        {new Date(flower.planting_date).toLocaleDateString('es-ES')}
                     </p>
                 </div>
 
@@ -483,14 +439,13 @@ export const FlowerInfoPanel: FC<FlowerInfoPanelProps> = ({
             {/* Indicador de cierre */}
             <div className="text-center mt-4 pt-3 border-t border-white/20">
                 <p className="text-xs text-gray-400">
-                    Haz clic en otra área para cerrar
+                    Click on another area to close
                 </p>
             </div>
         </div>
     );
 };
 
-// Componente de controles de navegación
 interface NavigationControlsProps {
     onCenterView?: () => void;
     onGoHome?: () => void;
@@ -498,8 +453,7 @@ interface NavigationControlsProps {
 }
 
 export const NavigationControls: FC<NavigationControlsProps> = ({ 
-    onCenterView, 
-    onGoHome,
+    onCenterView,
     className = "" 
 }) => {
     const handleGoHome = () => {
@@ -508,7 +462,6 @@ export const NavigationControls: FC<NavigationControlsProps> = ({
 
     return (
         <div className={`fixed top-4 right-4 z-30 flex flex-col gap-2 ${className}`}>
-            {/* Botón de centrar vista */}
             <button
                 onClick={onCenterView}
                 className="
@@ -518,23 +471,9 @@ export const NavigationControls: FC<NavigationControlsProps> = ({
                     group
                 "
                 title="Centrar vista"
-            >
-                <svg 
-                    className="w-6 h-6 group-hover:text-blue-400 transition-colors" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                >
-                    <path 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
-                        strokeWidth={2} 
-                        d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" 
-                    />
-                </svg>
-            </button>
 
-            {/* Botón de ir al home */}
+            ><Plus className="size-6" /></button>
+
             <button
                 onClick={handleGoHome}
                 className="

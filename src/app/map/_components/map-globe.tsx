@@ -1,21 +1,17 @@
 "use client";
 
-import { FC, useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useCesiumAdvanced } from "./hooks/useCesium";
-import { ErrorDisplay, LoadingOverlay, GlobeHeader, InfoPanel, SpecialEffectsControls, FlowerInfoPanel, NavigationControls } from "./ui/GlobeUI";
+import { ErrorDisplay, LoadingOverlay, FlowerInfoPanel, NavigationControls } from "./ui/GlobeUI";
 import FlowerFilterPanel from "./ui/FlowerFilterPanel";
 import { Flower } from "./types/flowers";
 import { FlowerFilter } from "./types/interfaces";
 
-/**
- * Componente Avanzado del Globo 3D con CesiumJS
- * Con movimientos suaves, oclusión de puntos e información interactiva
- */
 const MapGlobe = () => {
-    const [flowers, setFlowers] = useState<Flower[]>([]);
+    const [flowers] = useState<Flower[]>([]);
     const [selectedFlower, setSelectedFlower] = useState<any>(null);
     const [hoveredFlower, setHoveredFlower] = useState<any>(null);
-    const [currentFilters, setCurrentFilters] = useState<FlowerFilter>({});
+    const [, setCurrentFilters] = useState<FlowerFilter>({});
 
     // Callbacks para eventos de interacción con flores
     const handleFlowerHover = useCallback((flower: any) => {
@@ -33,10 +29,30 @@ const MapGlobe = () => {
         onFlowerClick: handleFlowerClickFromMap
     });
 
+    // Callback para centrar la vista (misma función que usa el botón)
+    const handleCenterView = useCallback(async () => {
+        if (viewer) {
+            try {
+                const Cesium = await import('cesium');
+                // Centrar en la vista global inicial
+                viewer.camera.flyTo({
+                    destination: Cesium.Cartesian3.fromDegrees(0.0, 20.0, 12000000),
+                    orientation: {
+                        heading: Cesium.Math.toRadians(0.0),
+                        pitch: Cesium.Math.toRadians(-90.0),
+                        roll: 0.0
+                    },
+                    duration: 3.0
+                });
+            } catch (error) {
+                console.error('Error centrando vista:', error);
+            }
+        }
+    }, [viewer]);
+
     // Callback para cuando se selecciona una flor
     const handleFlowerSelect = useCallback((flower: any) => {
         setSelectedFlower(flower);
-        console.log('Flor seleccionada:', flower);
         
         // Navegar automáticamente al punto de la flor en el mapa
         if (viewer && flower) {
@@ -52,31 +68,20 @@ const MapGlobe = () => {
     // Callback para cuando cambian los filtros
     const handleFiltersChange = useCallback((filters: FlowerFilter) => {
         setCurrentFilters(filters);
-        console.log('Filtros actualizados:', filters);
         // Aquí puedes agregar lógica para filtrar flores en el mapa
     }, []);
 
-    // Callback para centrar la vista
-    const handleCenterView = useCallback(async () => {
-        if (viewer) {
-            try {
-                const Cesium = await import('cesium');
-                // Centrar en la vista global inicial
-                viewer.camera.flyTo({
-                    destination: Cesium.Cartesian3.fromDegrees(0.0, 20.0, 12000000),
-                    orientation: {
-                        heading: Cesium.Math.toRadians(0.0),
-                        pitch: Cesium.Math.toRadians(-90.0),
-                        roll: 0.0
-                    },
-                    duration: 3.0
-                });
-                console.log('🎯 Vista centrada');
-            } catch (error) {
-                console.error('Error centrando vista:', error);
-            }
+    // Ejecutar centrado automático cuando el viewer esté listo
+    useEffect(() => {
+        if (viewer && !isLoading) {
+            // Ejecutar la misma función del botón después de un breve delay
+            const timer = setTimeout(() => {
+                handleCenterView();
+            }, 2000); // 2 segundos después de que termine la carga
+            
+            return () => clearTimeout(timer);
         }
-    }, [viewer]);
+    }, [viewer, isLoading, handleCenterView]);
 
     if (error) {
         return <ErrorDisplay error={error} title="Error MapGlobe Advanced" />;
@@ -87,7 +92,7 @@ const MapGlobe = () => {
             {isLoading && (
                 <LoadingOverlay 
                     title="FLORCAST Globe"
-                    subtitle="Optimizado para memoria - Inicializando..."
+                    subtitle="Iniciado Globo"
                     color="green"
                 />
             )}

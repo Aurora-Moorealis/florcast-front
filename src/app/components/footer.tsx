@@ -3,15 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { 
   SiInstagram, 
-  SiX, 
-  SiFacebook, 
-  SiLinkedin,
   SiGithub
 } from "react-icons/si";
 import { 
-  FaYoutube, 
   FaEnvelope, 
-  FaPhone, 
   FaMapMarkerAlt,
   FaLeaf,
   FaHeart,
@@ -25,7 +20,7 @@ function Footer() {
 
   return (
     <footer className="bg-gradient-to-b from-[#054017] via-[#0a5c1f] to-[#0d4519] text-white relative overflow-hidden">
-      {/* Patrón de flores decorativo */}
+      {/* Decorative flower pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-10 left-10 text-6xl">🌸</div>
         <div className="absolute top-32 right-20 text-4xl">🌺</div>
@@ -34,11 +29,11 @@ function Footer() {
         <div className="absolute bottom-32 right-10 text-4xl">🌹</div>
       </div>
 
-      {/* Contenido principal del footer */}
+      {/* Main footer content */}
       <div className="max-w-7xl mx-auto px-4 py-16 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           
-          {/* Sección del logo y descripción */}
+          {/* Logo and description section */}
           <div className="lg:col-span-1">
             <div className="mb-6">
               <Image 
@@ -50,38 +45,37 @@ function Footer() {
               />
             </div>
             <p className="text-green-100 mb-6 leading-relaxed">
-              Predicción avanzada del florecimiento usando inteligencia artificial y 
-              datos meteorológicos para optimizar la agricultura y jardinería.
+              Advanced flowering prediction using artificial intelligence and 
+              weather data to optimize agriculture and gardening.
             </p>
             <div className="flex items-center gap-2 text-green-200">
               <FaLeaf className="text-green-300" />
-              <span className="text-sm">Tecnología sostenible para un futuro verde</span>
+              <span className="text-sm">Sustainable technology for a green future</span>
             </div>
           </div>
 
-          {/* Enlaces rápidos */}
           <div>
             <h3 className="font-bold text-xl mb-6 text-green-200 flex items-center gap-2">
               <FaLeaf className="text-green-300" />
-              Enlaces Rápidos
+              Quick Links
             </h3>
             <ul className="space-y-3">
               <li>
                 <Link href="/" className="text-green-100 hover:text-white transition-colors duration-300 flex items-center gap-2 group">
                   <span className="w-2 h-2 bg-green-400 rounded-full group-hover:scale-125 transition-transform"></span>
-                  Inicio
+                  Home
                 </Link>
               </li>
               <li>
                 <Link href="/about" className="text-green-100 hover:text-white transition-colors duration-300 flex items-center gap-2 group">
                   <span className="w-2 h-2 bg-green-400 rounded-full group-hover:scale-125 transition-transform"></span>
-                  Sobre Nosotros
+                  About Us
                 </Link>
               </li>
               <li>
                 <Link href="/map" className="text-green-100 hover:text-white transition-colors duration-300 flex items-center gap-2 group">
                   <span className="w-2 h-2 bg-green-400 rounded-full group-hover:scale-125 transition-transform"></span>
-                  Mapa Interactivo
+                  Interactive Map
                 </Link>
               </li>
             </ul>
@@ -90,7 +84,7 @@ function Footer() {
           <div>
             <h3 className="font-bold text-xl mb-6 text-green-200 flex items-center gap-2">
               <FaEnvelope className="text-green-300" />
-              Contacto
+              Contact
             </h3>
             <ul className="space-y-4">
               <li className="flex items-center gap-3 text-green-100">
@@ -102,14 +96,14 @@ function Footer() {
             
               <li className="flex items-start gap-3 text-green-100">
                 <FaMapMarkerAlt className="text-green-300 flex-shrink-0 mt-1" />
-                <span>Distrito Nacional,<br/>República Dominicana</span>
+                <span>National District,<br/>Dominican Republic</span>
               </li>
             </ul>
           </div>
           <div>
             <h3 className="font-bold text-xl mb-6 text-green-200 flex items-center gap-2">
               <FaHeart className="text-pink-400" />
-              Síguenos
+              Follow Us
             </h3>
             
             <div className="flex flex-wrap gap-4 mb-8">
@@ -129,32 +123,35 @@ function Footer() {
             
             {/* Copyright */}
             <div className="text-center md:text-left">
-              <p className="text-green-200 text-sm">
-                © 2025 FLORCAST. Todos los derechos reservados.
-              </p>
-              <p className="text-green-300 text-xs mt-1">
-                Desarrollado con 💚 para un mundo más verde
-              </p>
-            </div>
+                  <p className="text-green-200">
+                  © 2025 FLORCAST. All rights reserved.
+                  </p>
+                  <p className="text-green-300 text-xs mt-1">
+                  Developed with 💚 for a greener world
+                  </p>
+                </div>
 
-            {/* Enlaces legales */}
+            {/* Legal links */}
             <div className="flex flex-wrap gap-6 text-sm">
-              <Link href="#" className="text-green-200 hover:text-white transition-colors">
-                Política de Privacidad
-              </Link>
-              <Link href="#" className="text-green-200 hover:text-white transition-colors">
-                Términos de Uso
-              </Link>
-              <Link href="https://github.com/Aurora-Moorealis/florcast-back" className="text-green-200 hover:text-white transition-colors">
+                <Link href="/privacy" className="text-green-200 hover:text-white transition-colors">
+                Privacy Policy
+                </Link>
+                <Link href="/terms" className="text-green-200 hover:text-white transition-colors">
+                Terms of Use
+                </Link>
+              <Link href="https://api.florcast.earth/docs" className="text-green-200 hover:text-white transition-colors">
                 API
               </Link>
+              <Link href="/sources" className="text-green-200 hover:text-white transition-colors">
+                Sources
+              </Link>
             </div>
 
-            {/* Botón scroll to top */}
+            {/* Scroll to top button */}
             <button 
               onClick={scrollToTop}
               className="bg-green-600 hover:bg-green-500 p-3 rounded-full transition-all duration-300 hover:scale-110 group"
-              aria-label="Volver arriba"
+              aria-label="Go to top"
             >
               <FaArrowUp className="text-white group-hover:animate-bounce" />
             </button>
@@ -162,7 +159,7 @@ function Footer() {
         </div>
       </div>
 
-      {/* Gradiente inferior */}
+      {/* Bottom gradient */}
       <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-green-400 via-emerald-400 to-green-500"></div>
     </footer>
   );

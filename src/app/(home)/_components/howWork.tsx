@@ -1,6 +1,6 @@
 "use client";
 
-import Images from "next/image";
+import Image from "next/image";
 import { forwardRef } from "react";
 
 interface HowWorkProps {
@@ -10,9 +10,8 @@ interface HowWorkProps {
 const HowWork = forwardRef<HTMLElement, HowWorkProps>(({ className }, ref) => {
   return (
     <section ref={ref} className={className}>
-      {/* Header con animación */}
       <div className="work-header flex items-center my-6 px-10 bg-gradient-to-r from-[#307b8e] to-[#4a9bb8] text-center py-6 rounded-lg mx-6 shadow-xl">
-        <Images
+        <Image
           width={48}
           height={48}
           src="/logo-flor.png"
@@ -86,12 +85,12 @@ const HowWork = forwardRef<HTMLElement, HowWorkProps>(({ className }, ref) => {
 
         <div className="flex-1">
           <div className="relative">
-            <Images
+            <Image
               width={400}
               height={400}
-              src="/redFlower.jpg"
+              src="/redFLower.jpg"
               alt="Como funciona - Campo de flores"
-              className="work-image rounded-lg shadow-2xl"
+              className="rounded-lg shadow-2xl"
             />
             {/* Elementos decorativos flotantes */}
             <div className="absolute -top-6 -right-6 w-12 h-12 bg-gradient-to-r from-green-400 to-blue-500 rounded-full animate-bounce opacity-60"></div>
@@ -104,6 +103,6 @@ const HowWork = forwardRef<HTMLElement, HowWorkProps>(({ className }, ref) => {
   );
 });
 
-HowWork.displayName = "HowWork";
+HowWork.displayName = 'HowWork';
 
 export default HowWork;

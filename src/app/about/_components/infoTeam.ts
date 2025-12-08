@@ -13,7 +13,7 @@ export const teamMembers: TeamMember[] = [
         gmail: "andreaesteissyrm@gmail.com"
     },
     {
-        imageUrl: "/about/claudia.png",
+        imageUrl: "/about/Claudia.png",
         name: "Claudia Ceballos M.",
         role: "UI/UX Designer",
         gmail: "claudiaceballosmatos@gmail.com"
