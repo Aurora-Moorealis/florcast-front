@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suez_One, Inknut_Antiqua } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next"
 
 const suezOne = Suez_One({
   variable: "--font-suez-one",
@@ -30,6 +31,7 @@ export default function RootLayout({
         className={`${suezOne.variable} ${inknutAntiqua.variable} antialiased`}
       >
         {children}
+        <Analytics />
       </body>
     </html>
   );
