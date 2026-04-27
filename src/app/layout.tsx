@@ -13,7 +13,6 @@ const inknutAntiqua = Inknut_Antiqua({
   weight: ["400", "700"],
 });
 
-
 export const metadata: Metadata = {
   title: "Florcast App",
   description: "Aplicación de predicción de floración",
@@ -25,8 +24,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
+        suppressHydrationWarning
         className={`${suezOne.variable} ${inknutAntiqua.variable} antialiased`}
       >
         {children}
