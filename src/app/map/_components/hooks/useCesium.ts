@@ -178,7 +178,7 @@ export const useCesiumAdvanced = (callbacks?: {
                     // Viewer (evita TypeError sobre canAnimate durante el render loop).
                     const internalWidget = (cesiumViewer as any).cesiumWidget;
                     if (internalWidget) {
-                        internalWidget._canAnimateUpdateCallback = () => {};
+                        internalWidget._canAnimateUpdateCallback = () => { };
                         if ('useDefaultRenderLoop' in internalWidget) {
                             internalWidget.useDefaultRenderLoop = false;
                         }
